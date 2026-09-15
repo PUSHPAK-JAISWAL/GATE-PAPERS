@@ -18,6 +18,7 @@ import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import android.provider.MediaStore
 import android.util.Log
+import android.util.LruCache
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
@@ -249,10 +250,19 @@ object PdfManager {
         }
     }
 
+    private val pageBitmapCache = object : LruCache<String, Bitmap>(32) {
+        override fun sizeOf(key: String, value: Bitmap): Int {
+            return 1 // store up to 32 rendered pages in memory
+        }
+    }
+
     /**
      * Renders a single page of a PDF file to a Bitmap.
      */
     fun renderPageToBitmap(pdfFile: File, pageIndex: Int, targetWidth: Int = 1080): Bitmap? {
+        val cacheKey = "${pdfFile.absolutePath}_${pageIndex}_$targetWidth"
+        pageBitmapCache.get(cacheKey)?.let { return it }
+
         return try {
             val pfd = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY)
             val renderer = PdfRenderer(pfd)
@@ -269,6 +279,7 @@ object PdfManager {
             page.close()
             renderer.close()
             pfd.close()
+            pageBitmapCache.put(cacheKey, bitmap)
             bitmap
         } catch (e: Exception) {
             Log.e(TAG, "Error rendering page $pageIndex of ${pdfFile.name}", e)
