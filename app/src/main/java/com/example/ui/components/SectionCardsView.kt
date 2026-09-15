@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,11 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.PendingActions
+import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -32,15 +31,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.DarkSurface
-import com.example.ui.theme.SolidAmber
-import com.example.ui.theme.SolidEmerald
 import com.example.ui.theme.SolidGateCyan
 import com.example.ui.theme.SolidGateOrange
 import com.example.ui.theme.SolidPurple
-import com.example.ui.theme.SolidSlate
 import com.example.ui.viewmodel.PapersUiState
 import com.example.ui.viewmodel.ProgressStats
 
@@ -54,55 +50,63 @@ fun SectionCardsView(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        // --- Card 1: GATE CS Section (Solid Orange, reference "Spotlight" card) ---
-        HeroSectionCard(
-            title = "GATE CS",
-            subtitle = "Computer Science & Information Tech",
-            countText = "${stats.csFinished} / ${stats.csTotal} Finished",
-            percentage = stats.csPercentage,
-            icon = Icons.Default.Code,
-            backgroundColor = SolidGateOrange,
-            textColor = Color.White,
-            isSelected = selectedSection == PapersUiState.SECTION_CS,
-            testTag = "section_card_cs",
-            onClick = {
-                if (selectedSection == PapersUiState.SECTION_CS) {
-                    onSelectSection(PapersUiState.SECTION_ALL)
-                } else {
-                    onSelectSection(PapersUiState.SECTION_CS)
+        // --- Side-by-Side Dual Section Cards (GATE CS & GATE DA) ---
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // GATE CS Card
+            SectionCompactCard(
+                title = "GATE CS",
+                subtitle = "Computer Science",
+                countText = "${stats.csFinished}/${stats.csTotal}",
+                percentage = stats.csPercentage,
+                icon = Icons.Default.Code,
+                backgroundColor = SolidGateOrange,
+                textColor = Color.White,
+                isSelected = selectedSection == PapersUiState.SECTION_CS,
+                modifier = Modifier.weight(1f),
+                testTag = "section_card_cs",
+                onClick = {
+                    if (selectedSection == PapersUiState.SECTION_CS) {
+                        onSelectSection(PapersUiState.SECTION_ALL)
+                    } else {
+                        onSelectSection(PapersUiState.SECTION_CS)
+                    }
                 }
-            }
-        )
+            )
 
-        // --- Card 2: GATE DA Section (Solid Cyan, reference "Popular Now" card) ---
-        HeroSectionCard(
-            title = "GATE DA",
-            subtitle = "Data Science & Artificial Intelligence",
-            countText = "${stats.daFinished} / ${stats.daTotal} Finished",
-            percentage = stats.daPercentage,
-            icon = Icons.Default.Psychology,
-            backgroundColor = SolidGateCyan,
-            textColor = Color(0xFF0A1E29),
-            isSelected = selectedSection == PapersUiState.SECTION_DA,
-            testTag = "section_card_da",
-            onClick = {
-                if (selectedSection == PapersUiState.SECTION_DA) {
-                    onSelectSection(PapersUiState.SECTION_ALL)
-                } else {
-                    onSelectSection(PapersUiState.SECTION_DA)
+            // GATE DA Card
+            SectionCompactCard(
+                title = "GATE DA",
+                subtitle = "Data Science & AI",
+                countText = "${stats.daFinished}/${stats.daTotal}",
+                percentage = stats.daPercentage,
+                icon = Icons.Default.Psychology,
+                backgroundColor = SolidGateCyan,
+                textColor = Color(0xFF0A1E29),
+                isSelected = selectedSection == PapersUiState.SECTION_DA,
+                modifier = Modifier.weight(1f),
+                testTag = "section_card_da",
+                onClick = {
+                    if (selectedSection == PapersUiState.SECTION_DA) {
+                        onSelectSection(PapersUiState.SECTION_ALL)
+                    } else {
+                        onSelectSection(PapersUiState.SECTION_DA)
+                    }
                 }
-            }
-        )
+            )
+        }
 
-        // --- Card 3: Preparation Progress Banner (Solid Purple, reference "New & Trending" card) ---
+        // --- Preparation Progress Overview Banner ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(16.dp))
                 .background(SolidPurple)
-                .padding(18.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp)
                 .testTag("progress_overview_card")
         ) {
             Column {
@@ -115,7 +119,7 @@ fun SectionCardsView(
                         Text(
                             text = "PROGRESS TRACKER",
                             color = Color.White.copy(alpha = 0.8f),
-                            fontSize = 11.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -123,99 +127,131 @@ fun SectionCardsView(
                         Text(
                             text = "Overall Preparation",
                             color = Color.White,
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
 
                     Box(
                         modifier = Modifier
-                            .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
-                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                            .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(10.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "${stats.overallPercentage}% Done",
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            fontSize = 12.sp
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                // Solid Progress bar
+                // Progress Bar
                 LinearProgressIndicator(
                     progress = { if (stats.totalPapers > 0) stats.finishedCount.toFloat() / stats.totalPapers.toFloat() else 0f },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(4.dp)),
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(3.dp)),
                     color = Color.White,
                     trackColor = Color.White.copy(alpha = 0.25f),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+                // Filter chips inside progress card
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "${stats.finishedCount} Finished",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "${stats.pendingCount} Pending to revisit",
-                        color = Color.White.copy(alpha = 0.9f),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "${stats.unattemptedCount} Left",
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp
-                    )
+                    // Finished chip
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White.copy(alpha = 0.15f))
+                            .clickable { onSelectStatusFilter(PapersUiState.STATUS_FINISHED) }
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "${stats.finishedCount} Done",
+                                color = Color.White,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1
+                            )
+                        }
+                    }
+
+                    // Pending chip
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White.copy(alpha = 0.15f))
+                            .clickable { onSelectStatusFilter(PapersUiState.STATUS_PENDING) }
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.HourglassTop,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "${stats.pendingCount} Pending",
+                                color = Color.White,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1
+                            )
+                        }
+                    }
+
+                    // Remaining counter
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White.copy(alpha = 0.1f))
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = "${stats.unattemptedCount} Left",
+                            color = Color.White.copy(alpha = 0.85f),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1
+                        )
+                    }
                 }
             }
-        }
-
-        // --- Bottom Two Mini Cards (Reference two smaller bottom cards) ---
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Revisit Later Quick Filter Card (Solid Amber)
-            MiniStatusCard(
-                title = "Pending Revisit",
-                count = stats.pendingCount,
-                icon = Icons.Default.PendingActions,
-                backgroundColor = SolidAmber,
-                textColor = Color(0xFF2A1B02),
-                modifier = Modifier.weight(1f),
-                testTag = "filter_pending_card",
-                onClick = { onSelectStatusFilter(PapersUiState.STATUS_PENDING) }
-            )
-
-            // Completed Papers Quick Filter Card (Solid Emerald)
-            MiniStatusCard(
-                title = "Finished",
-                count = stats.finishedCount,
-                icon = Icons.Default.CheckCircle,
-                backgroundColor = SolidEmerald,
-                textColor = Color(0xFF042616),
-                modifier = Modifier.weight(1f),
-                testTag = "filter_finished_card",
-                onClick = { onSelectStatusFilter(PapersUiState.STATUS_FINISHED) }
-            )
         }
     }
 }
 
 @Composable
-private fun HeroSectionCard(
+private fun SectionCompactCard(
     title: String,
     subtitle: String,
     countText: String,
@@ -224,154 +260,69 @@ private fun HeroSectionCard(
     backgroundColor: Color,
     textColor: Color,
     isSelected: Boolean,
+    modifier: Modifier = Modifier,
     testTag: String,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(22.dp))
+        modifier = modifier
+            .clip(RoundedCornerShape(16.dp))
             .background(backgroundColor)
             .clickable(onClick = onClick)
-            .padding(20.dp)
+            .padding(12.dp)
+            .defaultMinSize(minHeight = 100.dp)
             .testTag(testTag)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(textColor.copy(alpha = 0.15f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = title,
-                            tint = textColor,
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = title,
-                            color = textColor,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                        Text(
-                            text = subtitle,
-                            color = textColor.copy(alpha = 0.85f),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-
                 Box(
                     modifier = Modifier
-                        .size(34.dp)
+                        .size(32.dp)
                         .background(textColor.copy(alpha = 0.15f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = "Open $title",
+                        imageVector = icon,
+                        contentDescription = title,
                         tint = textColor,
                         modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(textColor.copy(alpha = 0.15f), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                ) {
-                    Text(
-                        text = countText,
-                        color = textColor,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
                     )
                 }
 
                 if (isSelected) {
                     Box(
                         modifier = Modifier
-                            .background(textColor, RoundedCornerShape(8.dp))
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                            .background(textColor, RoundedCornerShape(6.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = "FILTER ACTIVE",
+                            text = "ACTIVE",
                             color = backgroundColor,
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .background(textColor.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    ) {
+                        Text(
+                            text = "$percentage%",
+                            color = textColor,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
-                } else {
-                    Text(
-                        text = "$percentage% Complete",
-                        color = textColor.copy(alpha = 0.9f),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun MiniStatusCard(
-    title: String,
-    count: Int,
-    icon: ImageVector,
-    backgroundColor: Color,
-    textColor: Color,
-    testTag: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(18.dp))
-            .background(backgroundColor)
-            .clickable(onClick = onClick)
-            .padding(16.dp)
-            .testTag(testTag)
-    ) {
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = title,
-                    tint = textColor,
-                    modifier = Modifier.size(24.dp)
-                )
-
-                Text(
-                    text = "$count",
-                    color = textColor,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -379,8 +330,29 @@ private fun MiniStatusCard(
             Text(
                 text = title,
                 color = textColor,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 17.sp,
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Text(
+                text = subtitle,
+                color = textColor.copy(alpha = 0.85f),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "$countText Finished",
+                color = textColor.copy(alpha = 0.9f),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
             )
         }
     }

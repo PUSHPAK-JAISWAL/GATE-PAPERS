@@ -34,6 +34,13 @@ data class PaperEntity(
     }
 }
 
+val PaperEntity.fileSizeText: String
+    get() {
+        if (fileSizeBytes <= 0L) return "Official PDF"
+        val mb = fileSizeBytes.toDouble() / (1024.0 * 1024.0)
+        return if (mb >= 0.1) String.format("%.1f MB", mb) else "${fileSizeBytes / 1024} KB"
+    }
+
 data class QuestionItem(
     val number: Int,
     val sectionName: String,         // "General Aptitude" or "Core Subject"

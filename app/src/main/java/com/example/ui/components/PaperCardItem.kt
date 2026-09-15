@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -244,67 +245,71 @@ fun PaperCardItem(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Action row 1: View paper & Print / Save PDF
+            // Action row 1: View paper & Print & Download
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // View Paper Button
+                // View Paper Primary Button
                 Button(
                     onClick = onViewPaper,
                     modifier = Modifier
-                        .weight(1.2f)
-                        .height(44.dp)
+                        .weight(1f)
+                        .defaultMinSize(minHeight = 46.dp)
                         .testTag("view_paper_button_${paper.id}"),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = sectionAccentColor,
                         contentColor = if (isCS) Color.White else Color(0xFF0A1E29)
                     ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Visibility,
-                        contentDescription = "View Paper",
+                        contentDescription = null,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = "View Paper",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
+                        fontSize = 13.sp,
+                        maxLines = 1
                     )
                 }
 
-                // Print / Save PDF Button
+                // Print Button
                 OutlinedButton(
                     onClick = { PaperPrintHelper.printQuestionPaper(context, paper) },
                     modifier = Modifier
-                        .weight(1f)
-                        .height(44.dp)
+                        .defaultMinSize(minHeight = 46.dp)
                         .testTag("print_button_${paper.id}"),
                     shape = RoundedCornerShape(12.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 10.dp, vertical = 8.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = TextPrimary
                     )
                 ) {
                     Icon(
                         imageVector = Icons.Default.Print,
-                        contentDescription = "Print or Save PDF",
+                        contentDescription = "Print",
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "Print / PDF",
+                        text = "Print",
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1
                     )
                 }
 
-                // Download direct from repo icon button
+                // Download direct from repo button
                 OutlinedButton(
                     onClick = { PaperPrintHelper.downloadQuestionPaper(context, paper) },
                     modifier = Modifier
-                        .size(44.dp)
+                        .size(46.dp)
                         .testTag("download_button_${paper.id}"),
                     shape = RoundedCornerShape(12.dp),
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
@@ -325,31 +330,34 @@ fun PaperCardItem(
             // Progress Tracker Action Row: Finished vs Keep Pending
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 // "Finished" Toggle Button
                 Button(
                     onClick = onToggleFinished,
                     modifier = Modifier
                         .weight(1f)
-                        .height(38.dp)
+                        .defaultMinSize(minHeight = 44.dp)
                         .testTag("mark_finished_btn_${paper.id}"),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (isFinished) SolidEmerald else DarkSurfaceVariant,
                         contentColor = if (isFinished) Color.White else TextSecondary
                     ),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp, vertical = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
-                        modifier = Modifier.size(14.dp)
+                        modifier = Modifier.size(15.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = if (isFinished) "Finished ✓" else "Mark Finished",
                         fontSize = 12.sp,
-                        fontWeight = if (isFinished) FontWeight.Bold else FontWeight.Medium
+                        fontWeight = if (isFinished) FontWeight.Bold else FontWeight.Medium,
+                        maxLines = 1
                     )
                 }
 
@@ -358,24 +366,26 @@ fun PaperCardItem(
                     onClick = onTogglePending,
                     modifier = Modifier
                         .weight(1f)
-                        .height(38.dp)
+                        .defaultMinSize(minHeight = 44.dp)
                         .testTag("mark_pending_btn_${paper.id}"),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (isPending) SolidAmber else DarkSurfaceVariant,
                         contentColor = if (isPending) Color(0xFF2A1B02) else TextSecondary
                     ),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 6.dp, vertical = 8.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.HourglassTop,
                         contentDescription = null,
-                        modifier = Modifier.size(14.dp)
+                        modifier = Modifier.size(15.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = if (isPending) "Pending ⏳" else "Keep Pending",
                         fontSize = 12.sp,
-                        fontWeight = if (isPending) FontWeight.Bold else FontWeight.Medium
+                        fontWeight = if (isPending) FontWeight.Bold else FontWeight.Medium,
+                        maxLines = 1
                     )
                 }
             }
