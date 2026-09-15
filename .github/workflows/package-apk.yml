@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -58,7 +58,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Android APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --no-daemon --no-configuration-cache --stacktrace
 
       - name: Organize APK Artifacts
         run: |
@@ -67,7 +67,6 @@ jobs:
           if [ -n "$APK_PATH" ] && [ -f "$APK_PATH" ]; then
             echo "Found APK at: $APK_PATH"
             cp "$APK_PATH" release-artifacts/GATE-Papers.apk
-            cp "$APK_PATH" release-artifacts/app-debug.apk
             ls -lh release-artifacts/
           else
             echo "Error: APK not found in app/build/outputs/apk/debug"
@@ -78,27 +77,29 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: GATE-Papers-APK
-          path: release-artifacts/*.apk
+          path: release-artifacts/GATE-Papers.apk
           retention-days: 30
 
       - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.create_release == true)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.create_release == true)
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || inputs.release_tag }}
-          name: "GATE Papers App ${{ github.ref_type == 'tag' && github.ref_name || inputs.release_tag }}"
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || (github.event_name == 'workflow_dispatch' && inputs.release_tag || 'latest') }}
+          name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'GATE Papers Latest APK' }}
+          draft: false
+          prerelease: false
+          make_latest: true
           body: |
             ## GATE Papers Android Application
 
             Ready-to-install APK package:
-            - **GATE-Papers.apk**: Direct install for Android devices (Android 7.0+ / API 24+)
+            - **[GATE-Papers.apk](https://github.com/${{ github.repository }}/releases/download/${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'latest' }}/GATE-Papers.apk)**: Direct install for Android devices (Android 7.0+ / API 24+)
 
-            ### Included Features:
-            - **GATE CS & GATE DA** sections with full question paper repository
-            - **Dynamic Sync**: Direct integration with `https://github.com/PUSHPAK-JAISWAL/gatecs` and `https://github.com/PUSHPAK-JAISWAL/gateda`
-            - **In-App PDF Viewing & A4 Printing**: Clean print formatting for offline practice
-            - **Progress Tracking**: Finished and Pending Revisit markers with study notes
-            - **File Name Search**: Fast search by question paper file name
-          files: release-artifacts/*.apk
+            ### Features:
+            - **GATE CS & GATE DA**: Dynamic fetching directly from your GitHub repositories
+            - **In-App PDF Viewing & Printing**: A4 page-by-page rendering and print manager integration
+            - **Progress Tracker**: Mark papers as Finished or Keep Pending
+            - **Search**: Pure file-name based search
+          files: release-artifacts/GATE-Papers.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
