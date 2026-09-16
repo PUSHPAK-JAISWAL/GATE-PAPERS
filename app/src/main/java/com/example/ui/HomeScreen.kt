@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.PaperEntity
@@ -390,39 +391,47 @@ fun HomeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp, bottom = 2.dp),
+                        .padding(top = 10.dp, bottom = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f, fill = false)
+                    ) {
                         Text(
                             text = when (state.selectedSection) {
-                                PapersUiState.SECTION_CS -> "GATE CS Papers"
-                                PapersUiState.SECTION_DA -> "GATE DA Papers"
-                                else -> "All Question Papers"
+                                PapersUiState.SECTION_CS -> "GATE CS"
+                                PapersUiState.SECTION_DA -> "GATE DA"
+                                else -> "All Papers"
                             },
                             color = TextPrimary,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.ExtraBold
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
 
                         Box(
                             modifier = Modifier
                                 .background(DarkSurfaceVariant, RoundedCornerShape(8.dp))
-                                .padding(horizontal = 8.dp, vertical = 3.dp)
+                                .padding(horizontal = 7.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = "${state.filteredPapers.size}",
                                 color = TextSecondary,
-                                fontSize = 12.sp,
+                                fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     }
 
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
                         // Interactive Year Sort Toggle Button
                         Box(
                             modifier = Modifier
@@ -430,7 +439,7 @@ fun HomeScreen(
                                 .background(DarkSurfaceVariant)
                                 .border(1.dp, SolidGateOrange.copy(alpha = 0.35f), RoundedCornerShape(8.dp))
                                 .clickable { viewModel.toggleSortOrder() }
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                .padding(horizontal = 8.dp, vertical = 5.dp)
                                 .testTag("sort_papers_toggle_btn")
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -451,7 +460,9 @@ fun HomeScreen(
                                         "Year ↑ ($minYearFmt-$maxYearFmt)",
                                     color = TextPrimary,
                                     fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
                             }
                         }
@@ -460,21 +471,37 @@ fun HomeScreen(
                             state.selectedSection != PapersUiState.SECTION_ALL ||
                             state.searchQuery.isNotEmpty()
                         ) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Reset",
-                                color = SolidGateOrange,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
+                            Box(
                                 modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(SolidGateOrange.copy(alpha = 0.15f))
+                                    .border(1.dp, SolidGateOrange.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
                                     .clickable {
                                         viewModel.selectSection(PapersUiState.SECTION_ALL)
                                         viewModel.selectStatusFilter(PapersUiState.STATUS_ALL)
                                         viewModel.onSearchQueryChange("")
                                     }
-                                    .padding(4.dp)
+                                    .padding(horizontal = 7.dp, vertical = 5.dp)
                                     .testTag("reset_filters_btn")
-                            )
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription = "Clear Filters",
+                                        tint = SolidGateOrange,
+                                        modifier = Modifier.size(12.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(3.dp))
+                                    Text(
+                                        text = "Reset",
+                                        color = SolidGateOrange,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 1,
+                                        softWrap = false
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -615,7 +642,11 @@ private fun FilterPill(
 ) {
     val backgroundColor = if (isSelected) selectedColor else DarkSurface
     val textColor = if (isSelected) {
-        if (selectedColor == SolidGateCyan || selectedColor == SolidAmber) Color(0xFF111827) else Color.White
+        if (selectedColor == SolidGateCyan || selectedColor == SolidAmber || selectedColor == TextPrimary || selectedColor == Color.White) {
+            Color(0xFF0F172A)
+        } else {
+            Color.White
+        }
     } else {
         TextSecondary
     }

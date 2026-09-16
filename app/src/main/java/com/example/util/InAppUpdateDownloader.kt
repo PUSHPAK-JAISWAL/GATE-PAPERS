@@ -119,11 +119,18 @@ object InAppUpdateDownloader {
     fun validateDownloadedApk(context: Context, apkFile: File): ApkValidationResult {
         try {
             val pm = context.packageManager
-            val archiveInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                pm.getPackageArchiveInfo(apkFile.absolutePath, PackageManager.PackageInfoFlags.of(PackageManager.GET_SIGNING_CERTIFICATES.toLong()))
+            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                PackageManager.GET_SIGNING_CERTIFICATES or @Suppress("DEPRECATION") PackageManager.GET_SIGNATURES
             } else {
                 @Suppress("DEPRECATION")
-                pm.getPackageArchiveInfo(apkFile.absolutePath, PackageManager.GET_SIGNATURES)
+                PackageManager.GET_SIGNATURES
+            }
+
+            val archiveInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                pm.getPackageArchiveInfo(apkFile.absolutePath, PackageManager.PackageInfoFlags.of(flags.toLong()))
+            } else {
+                @Suppress("DEPRECATION")
+                pm.getPackageArchiveInfo(apkFile.absolutePath, flags)
             }
 
             if (archiveInfo == null) {
@@ -147,13 +154,10 @@ object InAppUpdateDownloader {
 
             // Extract signatures from both installed app and downloaded APK
             val installedInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                pm.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_SIGNING_CERTIFICATES.toLong()))
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                @Suppress("DEPRECATION")
-                pm.getPackageInfo(context.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                pm.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
             } else {
                 @Suppress("DEPRECATION")
-                pm.getPackageInfo(context.packageName, PackageManager.GET_SIGNATURES)
+                pm.getPackageInfo(context.packageName, flags)
             }
 
             val installedSignatures = extractSignatures(installedInfo)
@@ -193,11 +197,16 @@ object InAppUpdateDownloader {
                     signingInfo.signingCertificateHistory
                 }
                 certs?.forEach { result.add(it.toCharsString()) }
+                signingInfo.apkContentsSigners?.forEach { sig ->
+                    val str = sig.toCharsString()
+                    if (!result.contains(str)) result.add(str)
+                }
             }
         }
-        if (result.isEmpty()) {
-            @Suppress("DEPRECATION")
-            info.signatures?.forEach { result.add(it.toCharsString()) }
+        @Suppress("DEPRECATION")
+        info.signatures?.forEach { sig ->
+            val str = sig.toCharsString()
+            if (!result.contains(str)) result.add(str)
         }
         return result
     }
