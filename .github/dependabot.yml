@@ -1,0 +1,66 @@
+# Dependabot configuration for GATE Papers
+# Automated dependency updates for Gradle, GitHub Actions, and Website npm packages
+version: 2
+updates:
+  # Android Gradle dependencies & version catalog
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "build(deps)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "android"
+      - "gradle"
+    groups:
+      compose:
+        patterns:
+          - "androidx.compose.*"
+      firebase:
+        patterns:
+          - "com.google.firebase.*"
+      android-core:
+        patterns:
+          - "androidx.core.*"
+          - "androidx.lifecycle.*"
+          - "androidx.activity.*"
+          - "androidx.room.*"
+
+  # GitHub Actions workflows & actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci(deps)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+
+  # Companion Showcase Website (React / Vite / Tailwind) dependencies
+  - package-ecosystem: "npm"
+    directory: "/website"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(website-deps)"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "website"
+      - "javascript"

@@ -3,8 +3,11 @@ package com.example.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.BuildConfig
 import com.example.data.local.AppDatabase
 import com.example.data.model.PaperEntity
+import com.example.data.remote.AppReleaseInfo
+import com.example.data.remote.UpdateChecker
 import com.example.data.repository.PaperRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,6 +44,15 @@ data class FilterCriteria(
     val query: String = ""
 )
 
+internal data class UpdateUiModel(
+    val isChecking: Boolean = false,
+    val info: AppReleaseInfo? = null,
+    val isAvailable: Boolean = false,
+    val showDialog: Boolean = false,
+    val showSettings: Boolean = false,
+    val statusMessage: String? = null
+)
+
 data class PapersUiState(
     val papers: List<PaperEntity> = emptyList(),
     val filteredPapers: List<PaperEntity> = emptyList(),
@@ -51,7 +63,15 @@ data class PapersUiState(
     val stats: ProgressStats = ProgressStats(),
     val isLoading: Boolean = false,
     val isSyncing: Boolean = false,
-    val syncStatusMessage: String? = null
+    val syncStatusMessage: String? = null,
+    val isCheckingUpdate: Boolean = false,
+    val updateInfo: AppReleaseInfo? = null,
+    val isUpdateAvailable: Boolean = false,
+    val showUpdateDialog: Boolean = false,
+    val showSettingsDialog: Boolean = false,
+    val updateStatusMessage: String? = null,
+    val appVersionName: String = BuildConfig.VERSION_NAME,
+    val appVersionCode: Int = BuildConfig.VERSION_CODE
 ) {
     companion object {
         const val SECTION_ALL = "ALL"
@@ -76,6 +96,15 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
     private val _isSyncing = MutableStateFlow(false)
     private val _syncStatusMessage = MutableStateFlow<String?>("Live GitHub Repos Connected")
 
+    // In-App Update and Settings states
+    private val _isCheckingUpdate = MutableStateFlow(false)
+    private val _updateInfo = MutableStateFlow<AppReleaseInfo?>(null)
+    private val _isUpdateAvailable = MutableStateFlow(false)
+    private val _showUpdateDialog = MutableStateFlow(false)
+    private val _showSettingsDialog = MutableStateFlow(false)
+    private val _updateStatusMessage = MutableStateFlow<String?>("Up to date")
+    private val _hasDismissedUpdateForSession = MutableStateFlow(false)
+
     val uiState: StateFlow<PapersUiState>
 
     init {
@@ -86,6 +115,8 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
             repository.initializeDefaultDataIfNeeded()
             // Dynamically fetch latest papers from GitHub on launch
             syncWithGitHub()
+            // Check for new app release from GitHub on startup
+            checkForUpdates(silent = true)
         }
 
         val filtersFlow = combine(
@@ -96,13 +127,34 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
             FilterCriteria(section, status, query)
         }
 
+        val syncFlow = combine(_isSyncing, _syncStatusMessage) { syncing, msg ->
+            Pair(syncing, msg)
+        }
+
+        val updateFlow = combine(
+            _isCheckingUpdate,
+            _updateInfo,
+            _isUpdateAvailable,
+            _showUpdateDialog,
+            _showSettingsDialog
+        ) { isChecking, info, isAvailable, showDialog, showSettings ->
+            UpdateUiModel(
+                isChecking = isChecking,
+                info = info,
+                isAvailable = isAvailable,
+                showDialog = showDialog,
+                showSettings = showSettings,
+                statusMessage = _updateStatusMessage.value
+            )
+        }
+
         uiState = combine(
             repository.allPapers,
             filtersFlow,
             _activePaperForViewing,
-            _isSyncing,
-            _syncStatusMessage
-        ) { allPapers, filters, viewingPaper, syncing, syncMsg ->
+            syncFlow,
+            updateFlow
+        ) { allPapers, filters, viewingPaper, syncData, updateData ->
 
             val csList = allPapers.filter { it.section == PaperEntity.SECTION_CS }
             val daList = allPapers.filter { it.section == PaperEntity.SECTION_DA }
@@ -162,14 +214,105 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
                 searchQuery = filters.query,
                 activePaperForViewing = currentActive,
                 stats = stats,
-                isSyncing = syncing,
-                syncStatusMessage = syncMsg
+                isSyncing = syncData.first,
+                syncStatusMessage = syncData.second,
+                isCheckingUpdate = updateData.isChecking,
+                updateInfo = updateData.info,
+                isUpdateAvailable = updateData.isAvailable,
+                showUpdateDialog = updateData.showDialog,
+                showSettingsDialog = updateData.showSettings,
+                updateStatusMessage = updateData.statusMessage,
+                appVersionName = BuildConfig.VERSION_NAME,
+                appVersionCode = BuildConfig.VERSION_CODE
             )
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             PapersUiState()
         )
+    }
+
+    /**
+     * Dynamically checks GitHub for new app releases.
+     * If an update is detected, prompts the user to Update Now or Later.
+     */
+    fun checkForUpdates(silent: Boolean = false) {
+        if (_isCheckingUpdate.value) return
+        viewModelScope.launch {
+            _isCheckingUpdate.value = true
+            _updateStatusMessage.value = "Checking GitHub for latest release..."
+
+            val result = UpdateChecker.checkLatestRelease(BuildConfig.VERSION_NAME)
+            _isCheckingUpdate.value = false
+
+            result.onSuccess { release ->
+                if (release != null && release.isNewer) {
+                    _updateInfo.value = release
+                    _isUpdateAvailable.value = true
+                    _updateStatusMessage.value = "New release ${release.tagName} available!"
+                    if (!silent || !_hasDismissedUpdateForSession.value) {
+                        _showUpdateDialog.value = true
+                    }
+                } else if (release != null) {
+                    _updateInfo.value = release
+                    _isUpdateAvailable.value = false
+                    _updateStatusMessage.value = "You are using the latest release (${release.tagName})"
+                } else {
+                    _updateInfo.value = null
+                    _isUpdateAvailable.value = false
+                    _updateStatusMessage.value = "You are on the latest version (v${BuildConfig.VERSION_NAME})"
+                }
+            }.onFailure {
+                _updateStatusMessage.value = "You are on v${BuildConfig.VERSION_NAME} (Offline mode)"
+            }
+        }
+    }
+
+    /**
+     * User chose "Later" on update notification.
+     * Closes the dialog, but keeps update pending so they can access it from Settings.
+     */
+    fun dismissUpdateDialogLater() {
+        _showUpdateDialog.value = false
+        _hasDismissedUpdateForSession.value = true
+    }
+
+    fun openUpdateDialog() {
+        _showUpdateDialog.value = true
+    }
+
+    fun openSettings() {
+        _showSettingsDialog.value = true
+    }
+
+    fun closeSettings() {
+        _showSettingsDialog.value = false
+    }
+
+    /**
+     * Preview helper to test the update notification dialog with a mocked new release.
+     */
+    fun simulateNewReleaseForTesting() {
+        val testRelease = AppReleaseInfo(
+            tagName = "v1.1.0",
+            versionName = "1.1.0",
+            releaseTitle = "GATE Papers v1.1.0 - Practice Sets Update",
+            releaseNotes = "• Added Official 2026 Examination Mock Papers\n• High-performance PDF reader enhancements\n• Quick progress reset and export options\n• Dependabot automatic dependency updates",
+            publishedAt = "Today",
+            apkDownloadUrl = "https://github.com/PUSHPAK-JAISWAL/gate-papers/releases/latest/download/GATE-Papers.apk",
+            releasePageUrl = "https://github.com/PUSHPAK-JAISWAL/gate-papers/releases",
+            isNewer = true
+        )
+        _updateInfo.value = testRelease
+        _isUpdateAvailable.value = true
+        _showUpdateDialog.value = true
+        _updateStatusMessage.value = "New release v1.1.0 is available!"
+    }
+
+    fun resetAllProgress() {
+        viewModelScope.launch {
+            repository.resetAllProgress()
+        }
     }
 
     /**

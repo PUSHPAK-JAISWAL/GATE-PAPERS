@@ -42,4 +42,7 @@ interface PaperDao {
 
     @Query("UPDATE papers SET status = 'UNATTEMPTED', completedAt = NULL, isFlaggedToRevisit = 0 WHERE id = :id")
     suspend fun resetStatus(id: String)
+
+    @Query("UPDATE papers SET status = 'UNATTEMPTED', completedAt = NULL, isFlaggedToRevisit = 0")
+    suspend fun resetAllProgress()
 }

@@ -1,5 +1,7 @@
 package com.example.ui
 
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
@@ -33,7 +35,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.NewReleases
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -49,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,6 +64,8 @@ import com.example.ui.components.PaperCardItem
 import com.example.ui.components.QuestionPaperViewerScreen
 import com.example.ui.components.SearchBarView
 import com.example.ui.components.SectionCardsView
+import com.example.ui.components.SettingsDialog
+import com.example.ui.components.UpdateNotificationDialog
 import com.example.ui.theme.DarkBackground
 import com.example.ui.theme.DarkBorder
 import com.example.ui.theme.DarkSurface
@@ -78,6 +86,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     // If a paper is currently open in full viewer, show the viewer screen
     val activePaper = state.activePaperForViewing
@@ -93,6 +102,33 @@ fun HomeScreen(
             onSaveNotes = { notes -> viewModel.saveNotes(activePaper.id, notes) }
         )
         return
+    }
+
+    // In-App Update Prompt Dialog ("Update Now or Later")
+    if (state.showUpdateDialog && state.updateInfo != null) {
+        UpdateNotificationDialog(
+            currentVersion = state.appVersionName,
+            releaseInfo = state.updateInfo!!,
+            onUpdateNow = {
+                viewModel.dismissUpdateDialogLater()
+            },
+            onLater = {
+                viewModel.dismissUpdateDialogLater()
+            }
+        )
+    }
+
+    // Settings Menu & Details Modal
+    if (state.showSettingsDialog) {
+        SettingsDialog(
+            state = state,
+            onDismiss = { viewModel.closeSettings() },
+            onCheckUpdates = { viewModel.checkForUpdates(silent = false) },
+            onOpenUpdatePrompt = { viewModel.openUpdateDialog() },
+            onSimulateUpdate = { viewModel.simulateNewReleaseForTesting() },
+            onSyncRepos = { viewModel.syncWithGitHub() },
+            onResetProgress = { viewModel.resetAllProgress() }
+        )
     }
 
     Scaffold(
@@ -112,17 +148,155 @@ fun HomeScreen(
                 Spacer(
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.statusBars)
-                        .height(10.dp)
+                        .height(8.dp)
                 )
             }
 
-            // --- Top Pill Search Bar (From reference design) ---
+            // --- Top App Header Row (Branding & Settings Action) ---
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "GATE Papers",
+                            color = TextPrimary,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Black,
+                            letterSpacing = (-0.5).sp
+                        )
+
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        // CS Chip
+                        Box(
+                            modifier = Modifier
+                                .background(SolidGateOrange.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                                .border(1.dp, SolidGateOrange.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text("CS", color = SolidGateOrange, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+                        }
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        // DA Chip
+                        Box(
+                            modifier = Modifier
+                                .background(SolidGateCyan.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                                .border(1.dp, SolidGateCyan.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text("DA", color = SolidGateCyan, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold)
+                        }
+                    }
+
+                    // Settings Button with Notification Badge if Update Available
+                    Box(contentAlignment = Alignment.TopEnd) {
+                        IconButton(
+                            onClick = { viewModel.openSettings() },
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(DarkSurfaceVariant, CircleShape)
+                                .testTag("open_settings_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Settings Menu",
+                                tint = TextPrimary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+
+                        // Glowing badge if update is available
+                        if (state.isUpdateAvailable) {
+                            Box(
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .background(SolidGateOrange, CircleShape)
+                                    .border(2.dp, DarkBackground, CircleShape)
+                                    .testTag("update_badge_indicator")
+                            )
+                        }
+                    }
+                }
+            }
+
+            // --- Top Pill Search Bar ---
             item {
                 SearchBarView(
                     query = state.searchQuery,
                     onQueryChange = { viewModel.onSearchQueryChange(it) },
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
+            }
+
+            // --- In-App Update Notice Banner (If update available and user postponed) ---
+            if (state.isUpdateAvailable && state.updateInfo != null && !state.showUpdateDialog) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(SolidGateOrange.copy(alpha = 0.12f))
+                            .border(1.dp, SolidGateOrange.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                            .padding(horizontal = 14.dp, vertical = 10.dp)
+                            .testTag("pending_update_banner")
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.NewReleases,
+                                    contentDescription = null,
+                                    tint = SolidGateOrange,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = "Update Available: ${state.updateInfo!!.tagName}",
+                                        color = TextPrimary,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "Tap to update now or access from Settings",
+                                        color = TextMuted,
+                                        fontSize = 10.sp
+                                    )
+                                }
+                            }
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Button(
+                                    onClick = {
+                                        try {
+                                            val url = state.updateInfo!!.apkDownloadUrl.ifBlank { state.updateInfo!!.releasePageUrl }
+                                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                        } catch (_: Exception) {}
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = SolidGateOrange),
+                                    shape = RoundedCornerShape(8.dp),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                    modifier = Modifier.height(30.dp)
+                                ) {
+                                    Text("Update", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             // --- GitHub Live Repos Sync Bar ---

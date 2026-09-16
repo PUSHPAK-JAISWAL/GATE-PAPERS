@@ -41,6 +41,8 @@ With a single tap, access authentic past year question papers (2019–2024), vie
 | 📑 **Complete CS & DA Repository** | Official past papers from 2019 to 2024 for Computer Science (CS) and Data Science & AI (DA), including multi-session sets. |
 | 🚀 **High-Speed In-App PDF Reader** | Read question papers with multi-touch zoom, smooth page panning, page indicator, and full-screen reading mode without third-party ad-ridden PDF apps. |
 | 📴 **Offline Caching & Fast Sync** | Papers are cached locally after first viewing. Study anywhere, anytime—even with spotty or zero internet connectivity. |
+| 🔔 **In-App Update Alerts & Settings** | Automatic new release notification with "Update Now" or "Later" options, accessible anytime via the Settings menu. |
+| 🤖 **Automated Dependabot Lifecycle** | Full automated weekly dependency security updates for Gradle Version Catalog, GitHub Actions, and Web portal. |
 | ✅ **Preparation Progress Tracker** | Mark solved papers as **Finished** or keep them **Pending**. Persistent local Room database tracks your exact prep completion. |
 | 🔍 **Instant Search & Filter** | Instant filter by examination track (**CS / DA**), year range, and session codes (Set 1, Set 2). |
 | 🖨️ **Native Print & Export Support** | Direct integration with Android `PrintManager` allows 1-click PDF exporting, wireless printing, and physical study notes generation. |

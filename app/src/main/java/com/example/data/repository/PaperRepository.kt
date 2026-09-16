@@ -97,6 +97,10 @@ class PaperRepository(private val dao: PaperDao) {
         dao.resetStatus(id)
     }
 
+    suspend fun resetAllProgress() = withContext(Dispatchers.IO) {
+        dao.resetAllProgress()
+    }
+
     suspend fun updateNotes(id: String, notes: String) = withContext(Dispatchers.IO) {
         dao.updateNotes(id, notes)
     }
