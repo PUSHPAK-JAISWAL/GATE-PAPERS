@@ -1,6 +1,6 @@
 {
   "name": "GATE Papers",
-  "description": "Question papers and progress tracker for GATE CS and GATE DA.",
+  "description": "Question papers, PDF reader, and AI Animated Video Explainer for GATE CS & DA with BYOK Groq architecture.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

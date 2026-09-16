@@ -11,13 +11,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.ui.HomeScreen
+import com.example.ui.screens.MainAppScreen
 import com.example.ui.theme.DarkBackground
 import com.example.ui.theme.MyApplicationTheme
+import com.example.ui.viewmodel.AiExplainerViewModel
 import com.example.ui.viewmodel.PaperViewModel
+import com.example.ui.viewmodel.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
-  private val viewModel: PaperViewModel by viewModels()
+  private val paperViewModel: PaperViewModel by viewModels()
+  private val aiExplainerViewModel: AiExplainerViewModel by viewModels()
+  private val settingsViewModel: SettingsViewModel by viewModels()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,7 +32,11 @@ class MainActivity : ComponentActivity() {
           modifier = Modifier.fillMaxSize(),
           color = DarkBackground
         ) {
-          HomeScreen(viewModel = viewModel)
+          MainAppScreen(
+            paperViewModel = paperViewModel,
+            aiExplainerViewModel = aiExplainerViewModel,
+            settingsViewModel = settingsViewModel
+          )
         }
       }
     }

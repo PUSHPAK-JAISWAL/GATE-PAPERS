@@ -5,16 +5,28 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.data.model.AiExplanationEntity
+import com.example.data.model.AppSettingEntity
 import com.example.data.model.PaperEntity
 import com.example.data.repository.DefaultPapers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [PaperEntity::class], version = 2, exportSchema = false)
+@Database(
+    entities = [
+        PaperEntity::class,
+        AppSettingEntity::class,
+        AiExplanationEntity::class
+    ],
+    version = 3,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun paperDao(): PaperDao
+    abstract fun settingsDao(): SettingsDao
+    abstract fun aiExplanationDao(): AiExplanationDao
 
     companion object {
         @Volatile
