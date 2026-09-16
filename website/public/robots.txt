@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pushpak-jaiswal.github.io/gate-papers/sitemap.xml

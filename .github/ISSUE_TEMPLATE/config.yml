@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & Community Discussion
+    url: https://github.com/PUSHPAK-JAISWAL/gate-papers/discussions
+    about: Ask questions, share preparation strategies, or connect with other GATE CS/DA aspirants.
+  - name: ✉️ Direct Contact / Security
+    url: mailto:pushpakmjaiswal@gmail.com
+    about: Contact maintainer Pushpak Jaiswal directly.
