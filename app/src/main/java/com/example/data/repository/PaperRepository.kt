@@ -25,9 +25,20 @@ class PaperRepository(private val dao: PaperDao) {
     }
 
     suspend fun initializeDefaultDataIfNeeded() = withContext(Dispatchers.IO) {
+        val initialPapers = DefaultPapers.getInitialPapers()
+        val validIds = initialPapers.map { it.id }.toSet()
         val existing = dao.getAllPapersList()
         if (existing.isEmpty()) {
-            dao.insertAll(DefaultPapers.getInitialPapers())
+            dao.insertAll(initialPapers)
+        } else {
+            // Prune any legacy/phantom papers that do not exist on GitHub
+            val invalidPapers = existing.filter { it.id !in validIds }
+            if (invalidPapers.isNotEmpty()) {
+                dao.deletePapersNotIn(validIds.toList())
+                Log.d("PaperRepository", "Pruned ${invalidPapers.size} phantom papers from database")
+            }
+            // Ensure all 27 authentic papers are present
+            dao.insertAll(initialPapers)
         }
     }
 
@@ -65,7 +76,10 @@ class PaperRepository(private val dao: PaperDao) {
             }
 
             dao.upsertAll(mergedPapers)
-            Log.d("PaperRepository", "Successfully synced ${mergedPapers.size} papers from GitHub")
+            // PRUNE PHANTOMS: Only keep papers that actually exist on GitHub
+            val remoteIds = remotePapers.map { it.id }
+            dao.deletePapersNotIn(remoteIds)
+            Log.d("PaperRepository", "Successfully synced ${mergedPapers.size} papers from GitHub and pruned phantoms")
             Result.success(mergedPapers.size)
         } catch (e: Exception) {
             Log.e("PaperRepository", "GitHub sync failed", e)

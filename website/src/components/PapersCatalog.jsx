@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Search, Download, ExternalLink, Github, FileText, CheckCircle, ArrowDownUp, ArrowDown, ArrowUp } from 'lucide-react';
-import { PAPERS_DATA, APP_CONFIG } from '../data/papersData';
+import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 function extractYear(fileName, fallbackYear) {
   const match = fileName.match(/(19\d{2}|20\d{2})/);
@@ -8,17 +8,18 @@ function extractYear(fileName, fallbackYear) {
 }
 
 export default function PapersCatalog({ onDownloadClick }) {
+  const { papers, stats, config } = useDynamicPapers();
   const [selectedDiscipline, setSelectedDiscipline] = useState('ALL');
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('year-desc'); // 'year-desc', 'year-asc', 'name-asc', 'name-desc'
 
-  const filtered = PAPERS_DATA.filter(p => {
+  const filtered = papers.filter(p => {
     const matchesDisc = selectedDiscipline === 'ALL' || p.code === selectedDiscipline;
     const matchesSearch = 
       p.title.toLowerCase().includes(search.toLowerCase()) ||
-      p.topics.some(t => t.toLowerCase().includes(search.toLowerCase())) ||
+      (p.topics && p.topics.some(t => t.toLowerCase().includes(search.toLowerCase()))) ||
       p.fileName.toLowerCase().includes(search.toLowerCase()) ||
-      p.year.toString().includes(search);
+      (p.year && p.year.toString().includes(search));
     return matchesDisc && matchesSearch;
   });
 
@@ -53,10 +54,10 @@ export default function PapersCatalog({ onDownloadClick }) {
               Pushpak Jaiswal's Verified Repositories
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Authentic Question Papers Included ({PAPERS_DATA.length})
+              Authentic Question Papers Included ({stats.totalPapers})
             </h2>
             <p className="text-slate-400 text-sm sm:text-base mt-2 max-w-2xl">
-              All question papers are directly synchronized from authentic repositories (<a href={APP_CONFIG.gateCsRepo} target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:underline">gatecs</a> & <a href={APP_CONFIG.gateDaRepo} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">gateda</a>).
+              All question papers ({stats.yearRange}) are directly synchronized from verified repositories (<a href={config.gateCsRepo} target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:underline">gatecs</a> & <a href={config.gateDaRepo} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">gateda</a>).
               Zero altered scans, zero watermarks, and 100% verified question papers.
             </p>
           </div>
@@ -64,9 +65,9 @@ export default function PapersCatalog({ onDownloadClick }) {
           {/* Discipline Filters */}
           <div className="flex items-center gap-2 bg-[#111726] p-1.5 rounded-xl border border-slate-800 shrink-0">
             {[
-              { id: 'ALL', label: `All Papers (${PAPERS_DATA.length})` },
-              { id: 'CS', label: `GATE CS (${APP_CONFIG.csPapersCount})` },
-              { id: 'DA', label: `GATE DA (${APP_CONFIG.daPapersCount})` }
+              { id: 'ALL', label: `All Papers (${stats.totalPapers})` },
+              { id: 'CS', label: `GATE CS (${stats.csPapersCount})` },
+              { id: 'DA', label: `GATE DA (${stats.daPapersCount})` }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -114,7 +115,7 @@ export default function PapersCatalog({ onDownloadClick }) {
                 title="Toggle Year Sort"
               >
                 {sortOrder === 'year-desc' ? <ArrowDown className="w-3.5 h-3.5" /> : <ArrowUp className="w-3.5 h-3.5" />}
-                <span>{sortOrder === 'year-desc' ? 'Year (2026 → 2013)' : 'Year (2013 → 2026)'}</span>
+                <span>{sortOrder === 'year-desc' ? `Year (${stats.maxYear} → ${stats.minYear})` : `Year (${stats.minYear} → ${stats.maxYear})`}</span>
               </button>
 
               <select
@@ -122,8 +123,8 @@ export default function PapersCatalog({ onDownloadClick }) {
                 onChange={(e) => setSortOrder(e.target.value)}
                 className="bg-transparent text-xs font-semibold text-slate-300 py-1.5 px-2 rounded-lg border-none focus:outline-none cursor-pointer"
               >
-                <option value="year-desc" className="bg-[#111726] text-white">Year: Newest First (2026-2013)</option>
-                <option value="year-asc" className="bg-[#111726] text-white">Year: Oldest First (2013-2026)</option>
+                <option value="year-desc" className="bg-[#111726] text-white">Year: Newest First ({stats.maxYear} → {stats.minYear})</option>
+                <option value="year-asc" className="bg-[#111726] text-white">Year: Oldest First ({stats.minYear} → {stats.maxYear})</option>
                 <option value="name-asc" className="bg-[#111726] text-white">File Name (A → Z)</option>
                 <option value="name-desc" className="bg-[#111726] text-white">File Name (Z → A)</option>
               </select>
@@ -169,7 +170,7 @@ export default function PapersCatalog({ onDownloadClick }) {
 
                 {/* Topics covered */}
                 <div className="flex flex-wrap gap-1.5 mb-6">
-                  {paper.topics.map((topic, i) => (
+                  {(paper.topics || ['Computer Science & IT', 'GATE PYQ']).map((topic, i) => (
                     <span
                       key={i}
                       className="text-[11px] px-2 py-0.5 rounded bg-slate-900 text-slate-300 border border-slate-800"
@@ -208,7 +209,7 @@ export default function PapersCatalog({ onDownloadClick }) {
 
         {/* CTA Bottom Banner */}
         <div className="text-center p-8 rounded-2xl bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-cyan-500/10 border border-orange-500/20 max-w-4xl mx-auto">
-          <h3 className="text-xl font-bold text-white mb-2">Want to practice and solve all 27 papers offline?</h3>
+          <h3 className="text-xl font-bold text-white mb-2">Want to practice and solve all {stats.totalPapers} papers offline?</h3>
           <p className="text-sm text-slate-300 mb-6 max-w-xl mx-auto">
             Get the full GATE Papers APK directly on your Android phone. Built-in PDF reader, offline SQLite caching, preparation tracker, and print spooling.
           </p>
@@ -217,7 +218,7 @@ export default function PapersCatalog({ onDownloadClick }) {
             className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5"
           >
             <Download className="w-4 h-4" />
-            <span>Download GATE Papers APK ({APP_CONFIG.version})</span>
+            <span>Download GATE Papers APK ({stats.version})</span>
           </button>
         </div>
       </div>

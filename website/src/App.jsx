@@ -9,18 +9,19 @@ import FaqSection from './components/FaqSection';
 import AuthorSection from './components/AuthorSection';
 import Footer from './components/Footer';
 import QrCodeModal from './components/QrCodeModal';
-import { APP_CONFIG } from './data/papersData';
+import { DynamicPapersProvider, useDynamicPapers } from './data/DynamicPapersContext';
 import { CheckCircle2, Download, AlertCircle, X } from 'lucide-react';
 
-export default function App() {
+function AppContent() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [downloadNotification, setDownloadNotification] = useState(false);
+  const { config, stats } = useDynamicPapers();
 
   const handleDownload = () => {
     // 1. Trigger the download immediately in the browser
     const link = document.createElement('a');
-    link.href = APP_CONFIG.apkDirectUrl;
-    link.setAttribute('download', APP_CONFIG.apkName);
+    link.href = config.apkDirectUrl;
+    link.setAttribute('download', config.apkName || 'GATE-Papers.apk');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -45,11 +46,11 @@ export default function App() {
               <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
                 <span>Download Started!</span>
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono">
-                  {APP_CONFIG.apkSize}
+                  {config.apkSize}
                 </span>
               </h4>
               <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                Check your browser downloads for <strong>{APP_CONFIG.apkName}</strong>. Tap the file and select "Install" to start practicing!
+                Check your browser downloads for <strong>{config.apkName || 'GATE-Papers.apk'}</strong>. Tap the file and select "Install" to start practicing!
               </p>
               <div className="mt-2 text-[11px] text-orange-300 flex items-center gap-1">
                 <span>Need help?</span>
@@ -103,5 +104,13 @@ export default function App() {
         onClose={() => setIsQrModalOpen(false)}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <DynamicPapersProvider>
+      <AppContent />
+    </DynamicPapersProvider>
   );
 }

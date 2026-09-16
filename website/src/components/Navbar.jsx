@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Github, Menu, X, BookOpen, Smartphone, HelpCircle, Layers } from 'lucide-react';
-import { APP_CONFIG } from '../data/papersData';
+import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 export default function Navbar({ onDownloadClick }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { stats, config } = useDynamicPapers();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +39,7 @@ export default function Navbar({ onDownloadClick }) {
                   Android
                 </span>
               </span>
-              <p className="text-[11px] text-slate-400 hidden sm:block">CS & DA Study Companion</p>
+              <p className="text-[11px] text-slate-400 hidden sm:block">CS & DA ({stats.yearRange})</p>
             </div>
           </a>
 
@@ -61,7 +62,7 @@ export default function Navbar({ onDownloadClick }) {
               href="#papers"
               className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-orange-400 hover:bg-slate-800/40 rounded-lg transition-colors"
             >
-              Paper Catalog
+              Paper Catalog ({stats.totalPapers})
             </a>
             <a
               href="#install"
@@ -80,7 +81,7 @@ export default function Navbar({ onDownloadClick }) {
           {/* CTA Buttons */}
           <div className="hidden sm:flex items-center space-x-3">
             <a
-              href={APP_CONFIG.repoUrl}
+              href={config.repoUrl || 'https://github.com/PUSHPAK-JAISWAL/gate-papers'}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-lg transition-colors border border-slate-800 hover:border-slate-700"
@@ -96,7 +97,7 @@ export default function Navbar({ onDownloadClick }) {
               <Download className="w-4 h-4" />
               <span>Download APK</span>
               <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded font-mono">
-                {APP_CONFIG.version}
+                {stats.version}
               </span>
             </button>
           </div>
@@ -108,7 +109,7 @@ export default function Navbar({ onDownloadClick }) {
               className="inline-flex items-center space-x-1.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-xs px-3 py-2 rounded-lg shadow-md shadow-orange-500/20"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>APK</span>
+              <span>{stats.version}</span>
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -123,7 +124,7 @@ export default function Navbar({ onDownloadClick }) {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0D1321] border-b border-slate-800 px-4 pt-3 pb-6 space-y-2 shadow-2xl">
+        <div className="md:hidden bg-[#0D1322] border-b border-slate-800 px-4 pt-3 pb-6 space-y-2 shadow-2xl animate-in slide-in-from-top-2 duration-200">
           <a
             href="#features"
             onClick={() => setMobileMenuOpen(false)}
@@ -143,7 +144,7 @@ export default function Navbar({ onDownloadClick }) {
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
           >
-            Paper Catalog
+            Paper Catalog ({stats.totalPapers})
           </a>
           <a
             href="#install"
@@ -161,7 +162,7 @@ export default function Navbar({ onDownloadClick }) {
           </a>
           <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
             <a
-              href={APP_CONFIG.repoUrl}
+              href={config.repoUrl || 'https://github.com/PUSHPAK-JAISWAL/gate-papers'}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-slate-400 hover:text-white text-sm"

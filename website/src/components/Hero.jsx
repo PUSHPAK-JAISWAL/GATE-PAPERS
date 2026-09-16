@@ -1,8 +1,10 @@
 import React from 'react';
 import { Download, QrCode, ShieldCheck, Zap, Sparkles, CheckCircle2, ChevronRight, FileText, Printer, WifiOff } from 'lucide-react';
-import { APP_CONFIG } from '../data/papersData';
+import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 export default function Hero({ onDownloadClick, onOpenQrModal }) {
+  const { stats, config, isLiveSynced } = useDynamicPapers();
+
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       {/* Background Ambient Glows */}
@@ -14,14 +16,16 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-orange-500/30 text-orange-400 text-xs sm:text-sm font-medium mb-6 shadow-inner shadow-orange-500/10">
             <span className="flex h-2 w-2 rounded-full bg-orange-500 animate-ping" />
-            <span>Latest Release {APP_CONFIG.version} is Live</span>
+            <span>Latest Release {stats.version} is Live</span>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-300 font-semibold">GATE CS & DA 2013–2026 (27 Authentic Papers)</span>
+            <span className="text-slate-300 font-semibold">
+              GATE CS & DA {stats.yearRange} ({stats.totalPapers} Authentic Papers)
+            </span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-6">
-            Official GATE Papers (2013–2026) with{' '}
+            Official GATE Papers ({stats.yearRange}) with{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500">
               Zero Distractions
             </span>
@@ -29,8 +33,8 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
 
           {/* Subtitle */}
           <p className="text-lg sm:text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto">
-            The free, open-source Android study companion for <strong>GATE CS (Computer Science)</strong> & <strong>GATE DA (Data Science & AI)</strong> aspirants. 
-            Native in-app PDF rendering, 100% authentic past year question papers (PYQs), year/name sorting, offline Room database, solved progress tracking, and wireless printing.
+            The free, open-source Android study companion for <strong>GATE CS ({stats.csYearRange})</strong> & <strong>GATE DA ({stats.daYearRange})</strong> aspirants. 
+            Native in-app PDF rendering, {stats.totalPapers} authentic past year question papers (PYQs), dynamic year/name sorting, offline Room database, solved progress tracking, and wireless printing.
           </p>
 
           {/* Download & Action Buttons */}
@@ -42,7 +46,7 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
               <Download className="w-5 h-5 group-hover:animate-bounce" />
               <span>Download Direct APK</span>
               <span className="text-xs bg-black/20 font-mono px-2 py-0.5 rounded-full text-orange-100">
-                {APP_CONFIG.apkSize}
+                {stats.apkSize}
               </span>
             </button>
 
@@ -76,24 +80,24 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
               <WifiOff className="w-5 h-5 text-cyan-400 shrink-0" />
               <div>
-                <p className="text-xs font-semibold text-white">Offline First</p>
-                <p className="text-[11px] text-slate-400">Local Room SQLite</p>
+                <p className="text-xs font-semibold text-white">Offline Ready</p>
+                <p className="text-[11px] text-slate-400">Full Offline Mode</p>
               </div>
             </div>
 
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
-              <FileText className="w-5 h-5 text-orange-400 shrink-0" />
+              <FileText className="w-5 h-5 text-amber-400 shrink-0" />
               <div>
-                <p className="text-xs font-semibold text-white">Built-in Reader</p>
-                <p className="text-[11px] text-slate-400">Native PDF Engine</p>
+                <p className="text-xs font-semibold text-white">{stats.totalPapers} Verified PYQs</p>
+                <p className="text-[11px] text-slate-400">{stats.csPapersCount} CS + {stats.daPapersCount} DA</p>
               </div>
             </div>
 
             <div className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
               <Printer className="w-5 h-5 text-purple-400 shrink-0" />
               <div>
-                <p className="text-xs font-semibold text-white">Print & Export</p>
-                <p className="text-[11px] text-slate-400">1-Click Android Print</p>
+                <p className="text-xs font-semibold text-white">Print Support</p>
+                <p className="text-[11px] text-slate-400">Wireless & PDF Export</p>
               </div>
             </div>
           </div>

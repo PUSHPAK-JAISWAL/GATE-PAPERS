@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,16 +22,27 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.OpenInBrowser
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +63,12 @@ import com.example.ui.theme.SolidGateOrange
 import com.example.ui.theme.TextMuted
 import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
+import com.example.util.InAppUpdateDownloader
+import com.example.util.UpdateDownloadState
+import com.example.util.VersionUtil
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.io.File
 
 @Composable
 fun UpdateNotificationDialog(
@@ -60,11 +78,54 @@ fun UpdateNotificationDialog(
     onLater: () -> Unit
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var downloadJob by remember { mutableStateOf<Job?>(null) }
+    var downloadState by remember { mutableStateOf<UpdateDownloadState>(UpdateDownloadState.Idle) }
+
+    val normalizedCurrent = VersionUtil.normalize(currentVersion)
+    val normalizedRelease = VersionUtil.normalize(releaseInfo.versionName)
+
+    fun startInAppDownload() {
+        downloadJob?.cancel()
+        downloadState = UpdateDownloadState.Downloading(progressPercent = 0, bytesDownloaded = 0L, totalBytes = 0L)
+        downloadJob = coroutineScope.launch {
+            val result = InAppUpdateDownloader.downloadApk(
+                context = context,
+                downloadUrl = releaseInfo.apkDownloadUrl
+            ) { percent, downloaded, total ->
+                downloadState = UpdateDownloadState.Downloading(
+                    progressPercent = percent,
+                    bytesDownloaded = downloaded,
+                    totalBytes = total
+                )
+            }
+
+            result.fold(
+                onSuccess = { apkFile ->
+                    if (InAppUpdateDownloader.canInstallApk(context)) {
+                        downloadState = UpdateDownloadState.ReadyToInstall(apkFile)
+                        val launched = InAppUpdateDownloader.launchInstaller(context, apkFile)
+                        if (!launched) {
+                            Toast.makeText(context, "Tap 'Install Now' to finish update", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        downloadState = UpdateDownloadState.NeedsPermission(apkFile)
+                    }
+                },
+                onFailure = { error ->
+                    downloadState = UpdateDownloadState.Failed(error.message ?: "Failed to download update")
+                }
+            )
+        }
+    }
 
     Dialog(
-        onDismissRequest = onLater,
+        onDismissRequest = {
+            downloadJob?.cancel()
+            onLater()
+        },
         properties = DialogProperties(
-            dismissOnBackPress = true,
+            dismissOnBackPress = downloadState !is UpdateDownloadState.Downloading,
             dismissOnClickOutside = false
         )
     ) {
@@ -92,7 +153,12 @@ fun UpdateNotificationDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Download,
+                        imageVector = when (downloadState) {
+                            is UpdateDownloadState.ReadyToInstall -> Icons.Default.CheckCircle
+                            is UpdateDownloadState.Failed -> Icons.Default.ErrorOutline
+                            is UpdateDownloadState.NeedsPermission -> Icons.Default.Security
+                            else -> Icons.Default.Download
+                        },
                         contentDescription = "Update Icon",
                         tint = SolidGateOrange,
                         modifier = Modifier.size(28.dp)
@@ -103,7 +169,13 @@ fun UpdateNotificationDialog(
 
                 // Title & Subtitle
                 Text(
-                    text = "New Update Available!",
+                    text = when (downloadState) {
+                        is UpdateDownloadState.Downloading -> "Downloading Update..."
+                        is UpdateDownloadState.ReadyToInstall -> "Ready to Install"
+                        is UpdateDownloadState.NeedsPermission -> "Permission Needed"
+                        is UpdateDownloadState.Failed -> "Download Incomplete"
+                        else -> "New Update Available!"
+                    },
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = TextPrimary
@@ -122,7 +194,7 @@ fun UpdateNotificationDialog(
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = "Current: v$currentVersion",
+                            text = "Current: v$normalizedCurrent",
                             fontSize = 11.sp,
                             color = TextMuted,
                             fontWeight = FontWeight.Medium
@@ -140,7 +212,7 @@ fun UpdateNotificationDialog(
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
-                            text = "New: ${releaseInfo.tagName}",
+                            text = "New: v$normalizedRelease",
                             fontSize = 11.sp,
                             color = SolidGateOrange,
                             fontWeight = FontWeight.Bold
@@ -150,48 +222,203 @@ fun UpdateNotificationDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Release notes / highlights box
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(130.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(DarkBackground)
-                        .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
-                        .padding(12.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            text = if (releaseInfo.releaseTitle.isNotEmpty()) releaseInfo.releaseTitle else "What's New in this release:",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary
-                        )
+                // Interactive Content Area based on Download State
+                when (val state = downloadState) {
+                    is UpdateDownloadState.Downloading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(DarkBackground)
+                                .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                                .padding(16.dp)
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "In-App Background Download",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = TextPrimary
+                                    )
+                                    Text(
+                                        text = if (state.progressPercent >= 0) "${state.progressPercent}%" else "...",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = SolidGateOrange
+                                    )
+                                }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                                Spacer(modifier = Modifier.height(10.dp))
 
-                        val displayNotes = if (releaseInfo.releaseNotes.isNotBlank()) {
-                            releaseInfo.releaseNotes
-                        } else {
-                            "• Updated official GATE question papers and solutions.\n• Performance optimizations and smooth offline PDF viewing.\n• Built with automated dependency upgrades via Dependabot."
+                                if (state.progressPercent >= 0) {
+                                    LinearProgressIndicator(
+                                        progress = { state.progressPercent / 100f },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(8.dp)
+                                            .clip(RoundedCornerShape(4.dp)),
+                                        color = SolidGateOrange,
+                                        trackColor = DarkSurfaceVariant
+                                    )
+                                } else {
+                                    LinearProgressIndicator(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(8.dp)
+                                            .clip(RoundedCornerShape(4.dp)),
+                                        color = SolidGateOrange,
+                                        trackColor = DarkSurfaceVariant
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                val downloadedMb = String.format("%.1f", state.bytesDownloaded / (1024.0 * 1024.0))
+                                val totalMb = if (state.totalBytes > 0) {
+                                    String.format("%.1f", state.totalBytes / (1024.0 * 1024.0))
+                                } else {
+                                    "~30.0"
+                                }
+
+                                Text(
+                                    text = "$downloadedMb MB / $totalMb MB • Overwrites previous APK directly",
+                                    fontSize = 11.sp,
+                                    color = TextMuted
+                                )
+                            }
                         }
+                    }
 
-                        Text(
-                            text = displayNotes,
-                            fontSize = 12.sp,
-                            color = TextSecondary,
-                            lineHeight = 17.sp
-                        )
+                    is UpdateDownloadState.ReadyToInstall -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(DarkBackground)
+                                .border(1.dp, SolidGateOrange.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                                .padding(14.dp)
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "Update downloaded successfully!",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF4ADE80)
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Tap 'Install Now' below to open the Android installer prompt. Your existing bookmarks and solved status are safely preserved.",
+                                    fontSize = 11.5.sp,
+                                    color = TextSecondary,
+                                    lineHeight = 16.sp
+                                )
+                            }
+                        }
+                    }
+
+                    is UpdateDownloadState.NeedsPermission -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(DarkBackground)
+                                .border(1.dp, Color(0xFFFBBF24).copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                                .padding(14.dp)
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "Install Permission Required",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFFBBF24)
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "To install updates seamlessly in-app, please allow 'Install unknown apps' for GATE Papers in Android settings, then tap Install.",
+                                    fontSize = 11.5.sp,
+                                    color = TextSecondary,
+                                    lineHeight = 16.sp
+                                )
+                            }
+                        }
+                    }
+
+                    is UpdateDownloadState.Failed -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(DarkBackground)
+                                .border(1.dp, Color(0xFFEF4444).copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                                .padding(14.dp)
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "Download encountered an error",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFEF4444)
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = state.errorMessage,
+                                    fontSize = 11.5.sp,
+                                    color = TextSecondary
+                                )
+                            }
+                        }
+                    }
+
+                    UpdateDownloadState.Idle -> {
+                        // Release notes / highlights box
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(DarkBackground)
+                                .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                                .padding(12.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                Text(
+                                    text = if (releaseInfo.releaseTitle.isNotEmpty()) releaseInfo.releaseTitle else "What's New in this release:",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TextPrimary
+                                )
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                val displayNotes = if (releaseInfo.releaseNotes.isNotBlank()) {
+                                    releaseInfo.releaseNotes
+                                } else {
+                                    "• Authentic GATE papers sync with zero clutter.\n• In-app update installation with automatic progress.\n• Clean semantic versioning (1-x.0-9.0-9)."
+                                }
+
+                                Text(
+                                    text = displayNotes,
+                                    fontSize = 12.sp,
+                                    color = TextSecondary,
+                                    lineHeight = 17.sp
+                                )
+                            }
+                        }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Helper footnote explaining "Later"
+                // Footnote
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -204,96 +431,212 @@ fun UpdateNotificationDialog(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Choose 'Later' anytime to access via the Settings menu.",
+                        text = "Installs directly in-app — no duplicate APKs in Downloads folder.",
                         fontSize = 10.5.sp,
                         color = TextMuted
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(18.dp))
 
-                // Action Buttons: Update Now vs Later
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // Later Button
-                    OutlinedButton(
-                        onClick = onLater,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(46.dp)
-                            .testTag("update_later_button"),
-                        shape = RoundedCornerShape(12.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = TextSecondary
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Schedule,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = TextMuted
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Later",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                // Dynamic Action Buttons
+                when (val state = downloadState) {
+                    is UpdateDownloadState.Downloading -> {
+                        OutlinedButton(
+                            onClick = {
+                                downloadJob?.cancel()
+                                downloadState = UpdateDownloadState.Idle
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary)
+                        ) {
+                            Text(text = "Cancel Download", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                        }
                     }
 
-                    // Update Now Button
-                    Button(
-                        onClick = {
-                            openUrlOrDownload(context, releaseInfo)
-                            onUpdateNow()
-                        },
-                        modifier = Modifier
-                            .weight(1.3f)
-                            .height(46.dp)
-                            .testTag("update_now_button"),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = SolidGateOrange,
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Download,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Update Now",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                    is UpdateDownloadState.ReadyToInstall -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = onLater,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary)
+                            ) {
+                                Text(text = "Close", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            }
+
+                            Button(
+                                onClick = {
+                                    InAppUpdateDownloader.launchInstaller(context, state.apkFile)
+                                },
+                                modifier = Modifier
+                                    .weight(1.3f)
+                                    .height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = SolidGateOrange,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Icon(Icons.Default.Download, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(text = "Install Now", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+
+                    is UpdateDownloadState.NeedsPermission -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = onLater,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary)
+                            ) {
+                                Text(text = "Later", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            }
+
+                            Button(
+                                onClick = {
+                                    InAppUpdateDownloader.requestInstallPermission(context)
+                                },
+                                modifier = Modifier
+                                    .weight(1.3f)
+                                    .height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = SolidGateOrange,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Icon(Icons.Default.Security, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(text = "Allow & Install", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+
+                    is UpdateDownloadState.Failed -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = {
+                                    // Fallback to browser
+                                    val targetUrl = releaseInfo.apkDownloadUrl.ifBlank { releaseInfo.releasePageUrl }
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)).apply {
+                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    }
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary)
+                            ) {
+                                Icon(Icons.Default.OpenInBrowser, contentDescription = null, modifier = Modifier.size(15.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(text = "Browser", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                            }
+
+                            Button(
+                                onClick = { startInAppDownload() },
+                                modifier = Modifier
+                                    .weight(1.3f)
+                                    .height(46.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = SolidGateOrange,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(text = "Retry", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+
+                    UpdateDownloadState.Idle -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            // Later Button
+                            OutlinedButton(
+                                onClick = onLater,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(46.dp)
+                                    .testTag("update_later_button"),
+                                shape = RoundedCornerShape(12.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = TextSecondary
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Schedule,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp),
+                                    tint = TextMuted
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "Later",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+
+                            // Update Now Button (Initiates In-App Update)
+                            Button(
+                                onClick = { startInAppDownload() },
+                                modifier = Modifier
+                                    .weight(1.3f)
+                                    .height(46.dp)
+                                    .testTag("update_now_button"),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = SolidGateOrange,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "Update Now",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-}
-
-private fun openUrlOrDownload(context: Context, releaseInfo: AppReleaseInfo) {
-    try {
-        val targetUrl = releaseInfo.apkDownloadUrl.ifBlank { releaseInfo.releasePageUrl }
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        context.startActivity(intent)
-        Toast.makeText(context, "Opening APK download...", Toast.LENGTH_SHORT).show()
-    } catch (e: Exception) {
-        try {
-            val fallbackIntent = Intent(Intent.ACTION_VIEW, Uri.parse(releaseInfo.releasePageUrl)).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            context.startActivity(fallbackIntent)
-        } catch (ex: Exception) {
-            Toast.makeText(context, "Unable to open browser: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 }

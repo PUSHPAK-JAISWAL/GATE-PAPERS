@@ -7,6 +7,7 @@ import {
   ArrowDown, ArrowUp
 } from 'lucide-react';
 import { PAPERS_DATA, APP_CONFIG } from '../data/papersData';
+import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 function extractYear(fileName, fallbackYear) {
   const match = fileName.match(/(19\d{2}|20\d{2})/);
@@ -14,8 +15,15 @@ function extractYear(fileName, fallbackYear) {
 }
 
 export default function AppSimulator() {
-  // Initialize state with all 27 authentic papers
-  const [papers, setPapers] = useState(PAPERS_DATA);
+  const { papers: dynamicPapers, stats, config } = useDynamicPapers();
+  // Initialize state with dynamic authentic papers
+  const [papers, setPapers] = useState(dynamicPapers || PAPERS_DATA);
+
+  React.useEffect(() => {
+    if (dynamicPapers && dynamicPapers.length > 0) {
+      setPapers(dynamicPapers);
+    }
+  }, [dynamicPapers]);
   const [activeSectionFilter, setActiveSectionFilter] = useState('ALL'); // ALL, CS, DA, PENDING, FINISHED, UNATTEMPTED
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('year-desc'); // 'year-desc' or 'year-asc'
@@ -404,7 +412,11 @@ export default function AppSimulator() {
                         title="Toggle Year Sort Order"
                       >
                         {sortOrder === 'year-desc' ? <ArrowDown className="w-2.5 h-2.5" /> : <ArrowUp className="w-2.5 h-2.5" />}
-                        <span>{sortOrder === 'year-desc' ? 'Year ↓ (2026-13)' : 'Year ↑ (2013-26)'}</span>
+                        <span>
+                          {sortOrder === 'year-desc'
+                            ? `Year ↓ (${stats.maxYear}-${String(stats.minYear % 100).padStart(2, '0')})`
+                            : `Year ↑ (${String(stats.minYear % 100).padStart(2, '0')}-${String(stats.maxYear % 100).padStart(2, '0')})`}
+                        </span>
                       </button>
                     </div>
 
@@ -675,7 +687,7 @@ export default function AppSimulator() {
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-bold text-white text-xs">App Updates & Releases</span>
                           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-orange-400">
-                            {APP_CONFIG.version}
+                            {stats.version}
                           </span>
                         </div>
                         <p className="text-[11px] text-slate-400 mb-3">
@@ -709,15 +721,15 @@ export default function AppSimulator() {
 
                         <div className="flex items-center justify-between py-1 border-b border-slate-800">
                           <span className="text-slate-400 text-[11px]">GitHub</span>
-                          <a href={APP_CONFIG.author.githubUrl} target="_blank" rel="noopener noreferrer" className="text-orange-400 text-[11px] hover:underline flex items-center gap-1 font-mono">
+                          <a href="https://github.com/PUSHPAK-JAISWAL" target="_blank" rel="noopener noreferrer" className="text-orange-400 text-[11px] hover:underline flex items-center gap-1 font-mono">
                             @PUSHPAK-JAISWAL <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         </div>
 
                         <div className="flex items-center justify-between py-1 border-b border-slate-800">
                           <span className="text-slate-400 text-[11px]">Support Email</span>
-                          <a href={`mailto:${APP_CONFIG.author.email}`} className="text-cyan-400 text-[11px] hover:underline font-mono">
-                            {APP_CONFIG.author.email}
+                          <a href="mailto:pushpakmjaiswal@gmail.com" className="text-cyan-400 text-[11px] hover:underline font-mono">
+                            pushpakmjaiswal@gmail.com
                           </a>
                         </div>
 

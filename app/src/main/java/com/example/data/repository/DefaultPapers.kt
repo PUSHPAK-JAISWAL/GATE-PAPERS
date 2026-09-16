@@ -15,12 +15,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2026,
                 title = "2026_CS2.pdf",
-                subtitle = "2.9 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "2.8 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 2,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2026_CS2.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2026_CS2.pdf",
                 fileSizeBytes = 2905404L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 2"
             )
         )
@@ -30,12 +33,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2026,
                 title = "2026_CS1.pdf",
-                subtitle = "2.4 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "2.3 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2026_CS1.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2026_CS1.pdf",
                 fileSizeBytes = 2455522L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 1"
             )
         )
@@ -45,12 +51,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2025,
                 title = "2025_CS2.pdf",
-                subtitle = "784 KB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "766 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 2,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2025_CS2.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2025_CS2.pdf",
                 fileSizeBytes = 784221L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 2"
             )
         )
@@ -60,12 +69,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2025,
                 title = "2025_CS1.pdf",
-                subtitle = "1.0 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "1001 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2025_CS1.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2025_CS1.pdf",
                 fileSizeBytes = 1024592L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 1"
             )
         )
@@ -75,12 +87,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2024,
                 title = "2024_CS2.pdf",
-                subtitle = "886 KB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "865 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 2,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2024_CS2.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2024_CS2.pdf",
                 fileSizeBytes = 886167L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 2"
             )
         )
@@ -90,12 +105,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2024,
                 title = "2024_CS1.pdf",
-                subtitle = "834 KB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "815 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2024_CS1.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2024_CS1.pdf",
                 fileSizeBytes = 834514L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 1"
             )
         )
@@ -105,12 +123,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2023,
                 title = "2023_CS.pdf",
-                subtitle = "424 KB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "414 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2023_CS.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2023_CS.pdf",
                 fileSizeBytes = 424406L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
@@ -120,12 +141,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2022,
                 title = "2022_CS.pdf",
-                subtitle = "567 KB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "554 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2022_CS.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2022_CS.pdf",
                 fileSizeBytes = 567522L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
@@ -135,12 +159,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2021,
                 title = "2021_CS.pdf",
-                subtitle = "18.3 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "17.5 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2021_CS.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2021_CS.pdf",
                 fileSizeBytes = 18388574L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
@@ -150,43 +177,34 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2020,
                 title = "2020_CS.pdf",
-                subtitle = "18.3 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "2.2 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2020_CS.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2020_CS.pdf",
-                fileSizeBytes = 18388574L,
+                fileSizeBytes = 2283406L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
         list.add(
             PaperEntity(
-                id = "gatecs_2019_CS2.pdf",
+                id = "gatecs_2019_CS.pdf",
                 section = PaperEntity.SECTION_CS,
                 year = 2019,
-                title = "2019_CS2.pdf",
-                subtitle = "1.8 MB • PUSHPAK-JAISWAL/gatecs",
-                setNumber = 2,
-                githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2019_CS2.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2019_CS2.pdf",
-                fileSizeBytes = 1887436L,
-                coreTopics = "Computer Science & IT Shift 2"
-            )
-        )
-        list.add(
-            PaperEntity(
-                id = "gatecs_2019_CS1.pdf",
-                section = PaperEntity.SECTION_CS,
-                year = 2019,
-                title = "2019_CS1.pdf",
-                subtitle = "1.9 MB • PUSHPAK-JAISWAL/gatecs",
+                title = "2019_CS.pdf",
+                subtitle = "2.4 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2019_CS1.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2019_CS1.pdf",
-                fileSizeBytes = 1992294L,
-                coreTopics = "Computer Science & IT Shift 1"
+                githubFileName = "2019_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2019_CS.pdf",
+                fileSizeBytes = 2514739L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
             )
         )
         list.add(
@@ -195,12 +213,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2018,
                 title = "2018_CS.pdf",
-                subtitle = "1.2 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "388 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2018_CS.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2018_CS.pdf",
-                fileSizeBytes = 1258291L,
+                fileSizeBytes = 397332L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
@@ -210,12 +231,15 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2017,
                 title = "2017_CS2.pdf",
-                subtitle = "1.4 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "3.9 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 2,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2017_CS2.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2017_CS2.pdf",
-                fileSizeBytes = 1468006L,
+                fileSizeBytes = 4085742L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 2"
             )
         )
@@ -225,133 +249,70 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2017,
                 title = "2017_CS1.pdf",
-                subtitle = "1.3 MB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "8.5 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2017_CS1.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2017_CS1.pdf",
-                fileSizeBytes = 1363148L,
+                fileSizeBytes = 8911960L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Shift 1"
             )
         )
         list.add(
             PaperEntity(
-                id = "gatecs_2016_CS2.pdf",
+                id = "gatecs_2016_CS.pdf",
                 section = PaperEntity.SECTION_CS,
                 year = 2016,
-                title = "2016_CS2.pdf",
-                subtitle = "1.1 MB • PUSHPAK-JAISWAL/gatecs",
-                setNumber = 2,
-                githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2016_CS2.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2016_CS2.pdf",
-                fileSizeBytes = 1153433L,
-                coreTopics = "Computer Science & IT Shift 2"
-            )
-        )
-        list.add(
-            PaperEntity(
-                id = "gatecs_2016_CS1.pdf",
-                section = PaperEntity.SECTION_CS,
-                year = 2016,
-                title = "2016_CS1.pdf",
-                subtitle = "1.1 MB • PUSHPAK-JAISWAL/gatecs",
+                title = "2016_CS.pdf",
+                subtitle = "557 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2016_CS1.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2016_CS1.pdf",
-                fileSizeBytes = 1153433L,
-                coreTopics = "Computer Science & IT Shift 1"
+                githubFileName = "2016_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2016_CS.pdf",
+                fileSizeBytes = 570576L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
             )
         )
         list.add(
             PaperEntity(
-                id = "gatecs_2015_CS3.pdf",
+                id = "gatecs_2015_CS.pdf",
                 section = PaperEntity.SECTION_CS,
                 year = 2015,
-                title = "2015_CS3.pdf",
-                subtitle = "950 KB • PUSHPAK-JAISWAL/gatecs",
-                setNumber = 3,
-                githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2015_CS3.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS3.pdf",
-                fileSizeBytes = 972800L,
-                coreTopics = "Computer Science & IT Shift 3"
-            )
-        )
-        list.add(
-            PaperEntity(
-                id = "gatecs_2015_CS2.pdf",
-                section = PaperEntity.SECTION_CS,
-                year = 2015,
-                title = "2015_CS2.pdf",
-                subtitle = "980 KB • PUSHPAK-JAISWAL/gatecs",
-                setNumber = 2,
-                githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2015_CS2.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS2.pdf",
-                fileSizeBytes = 1003520L,
-                coreTopics = "Computer Science & IT Shift 2"
-            )
-        )
-        list.add(
-            PaperEntity(
-                id = "gatecs_2015_CS1.pdf",
-                section = PaperEntity.SECTION_CS,
-                year = 2015,
-                title = "2015_CS1.pdf",
-                subtitle = "960 KB • PUSHPAK-JAISWAL/gatecs",
+                title = "2015_CS.pdf",
+                subtitle = "9.0 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2015_CS1.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS1.pdf",
-                fileSizeBytes = 983040L,
-                coreTopics = "Computer Science & IT Shift 1"
+                githubFileName = "2015_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS.pdf",
+                fileSizeBytes = 9455569L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
             )
         )
         list.add(
             PaperEntity(
-                id = "gatecs_2014_CS3.pdf",
+                id = "gatecs_2014_CS.pdf",
                 section = PaperEntity.SECTION_CS,
                 year = 2014,
-                title = "2014_CS3.pdf",
-                subtitle = "890 KB • PUSHPAK-JAISWAL/gatecs",
-                setNumber = 3,
-                githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2014_CS3.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS3.pdf",
-                fileSizeBytes = 911360L,
-                coreTopics = "Computer Science & IT Shift 3"
-            )
-        )
-        list.add(
-            PaperEntity(
-                id = "gatecs_2014_CS2.pdf",
-                section = PaperEntity.SECTION_CS,
-                year = 2014,
-                title = "2014_CS2.pdf",
-                subtitle = "910 KB • PUSHPAK-JAISWAL/gatecs",
-                setNumber = 2,
-                githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2014_CS2.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS2.pdf",
-                fileSizeBytes = 931840L,
-                coreTopics = "Computer Science & IT Shift 2"
-            )
-        )
-        list.add(
-            PaperEntity(
-                id = "gatecs_2014_CS1.pdf",
-                section = PaperEntity.SECTION_CS,
-                year = 2014,
-                title = "2014_CS1.pdf",
-                subtitle = "920 KB • PUSHPAK-JAISWAL/gatecs",
+                title = "2014_CS.pdf",
+                subtitle = "2.4 MB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
-                githubFileName = "2014_CS1.pdf",
-                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS1.pdf",
-                fileSizeBytes = 942080L,
-                coreTopics = "Computer Science & IT Shift 1"
+                githubFileName = "2014_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS.pdf",
+                fileSizeBytes = 2494424L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
             )
         )
         list.add(
@@ -360,12 +321,123 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_CS,
                 year = 2013,
                 title = "2013_CS.pdf",
-                subtitle = "750 KB • PUSHPAK-JAISWAL/gatecs",
+                subtitle = "735 KB • PUSHPAK-JAISWAL/gatecs",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gatecs",
                 githubFileName = "2013_CS.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2013_CS.pdf",
-                fileSizeBytes = 768000L,
+                fileSizeBytes = 753124L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2012_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2012,
+                title = "2012_CS.pdf",
+                subtitle = "299 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2012_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2012_CS.pdf",
+                fileSizeBytes = 305852L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2011_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2011,
+                title = "2011_CS.pdf",
+                subtitle = "1.3 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2011_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2011_CS.pdf",
+                fileSizeBytes = 1377241L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2010_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2010,
+                title = "2010_CS.pdf",
+                subtitle = "190 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2010_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2010_CS.pdf",
+                fileSizeBytes = 194309L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2009_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2009,
+                title = "2009_CS.pdf",
+                subtitle = "2.4 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2009_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2009_CS.pdf",
+                fileSizeBytes = 2565530L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2008_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2008,
+                title = "2008_CS.pdf",
+                subtitle = "2.9 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2008_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2008_CS.pdf",
+                fileSizeBytes = 3086066L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2007_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2007,
+                title = "2007_CS.pdf",
+                subtitle = "3.2 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2007_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2007_CS.pdf",
+                fileSizeBytes = 3304840L,
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
@@ -377,13 +449,16 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_DA,
                 year = 2026,
                 title = "DA2026.pdf",
-                subtitle = "2.1 MB • PUSHPAK-JAISWAL/gateda",
+                subtitle = "2.0 MB • PUSHPAK-JAISWAL/gateda",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gateda",
                 githubFileName = "DA2026.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gateda/main/DA2026.pdf",
                 fileSizeBytes = 2116753L,
-                coreTopics = "Data Science & AI Exam Paper"
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Data Science & AI Official Paper"
             )
         )
         list.add(
@@ -392,13 +467,16 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_DA,
                 year = 2025,
                 title = "DA2025.pdf",
-                subtitle = "7.9 MB • PUSHPAK-JAISWAL/gateda",
+                subtitle = "7.5 MB • PUSHPAK-JAISWAL/gateda",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gateda",
                 githubFileName = "DA2025.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gateda/main/DA2025.pdf",
                 fileSizeBytes = 7897137L,
-                coreTopics = "Data Science & AI Exam Paper"
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Data Science & AI Official Paper"
             )
         )
         list.add(
@@ -407,83 +485,155 @@ object DefaultPapers {
                 section = PaperEntity.SECTION_DA,
                 year = 2024,
                 title = "DA2024.pdf",
-                subtitle = "991 KB • PUSHPAK-JAISWAL/gateda",
+                subtitle = "968 KB • PUSHPAK-JAISWAL/gateda",
                 setNumber = 1,
                 githubRepo = "PUSHPAK-JAISWAL/gateda",
                 githubFileName = "DA2024.pdf",
                 rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gateda/main/DA2024.pdf",
                 fileSizeBytes = 991009L,
-                coreTopics = "Data Science & AI Exam Paper"
+                totalMarks = 100,
+                durationMinutes = 180,
+                totalQuestions = 65,
+                coreTopics = "Data Science & AI Official Paper"
             )
         )
-
         return list
     }
 
     fun getQuestionsForPaper(paperId: String): List<QuestionItem> {
-        val isDA = paperId.contains("da", ignoreCase = true)
-        if (isDA) {
-            return listOf(
+        val isCs = !paperId.startsWith("gateda")
+        return if (isCs) {
+            listOf(
                 QuestionItem(
                     number = 1,
                     sectionName = "General Aptitude",
                     type = "MCQ",
                     marks = 1,
                     negativeMarks = 0.33,
-                    topic = "Verbal Aptitude",
-                    questionText = "The team members discussed the project proposal _____ great detail before arriving at a unanimous decision.",
-                    options = listOf("A) at", "B) in", "C) with", "D) on"),
-                    correctAnswer = "B) in",
-                    explanation = "The correct English idiomatic phrase is 'in great detail'."
+                    topic = "Verbal Ability",
+                    questionText = "The committee decided to _________ the proposal until further environmental feasibility studies were completed.",
+                    options = listOf("A) defer", "B) differ", "C) deflect", "D) degrade"),
+                    correctAnswer = "A",
+                    explanation = "'Defer' means to put off to a later time or postpone."
                 ),
                 QuestionItem(
                     number = 2,
-                    sectionName = "Probability & Statistics",
-                    type = "MCQ",
-                    marks = 1,
-                    negativeMarks = 0.33,
-                    topic = "Random Variables",
-                    questionText = "Let X be a continuous random variable uniformly distributed over the interval [2, 10]. What is the expected value E[X] and Variance Var(X)?",
-                    options = listOf(
-                        "A) E[X] = 6, Var(X) = 5.33",
-                        "B) E[X] = 6, Var(X) = 8.00",
-                        "C) E[X] = 5, Var(X) = 6.67",
-                        "D) E[X] = 8, Var(X) = 4.00"
-                    ),
-                    correctAnswer = "A) E[X] = 6, Var(X) = 5.33",
-                    explanation = "For uniform distribution U(a,b): E[X] = (a+b)/2 = (2+10)/2 = 6. Var(X) = (b-a)^2 / 12 = 8^2 / 12 = 64/12 = 5.33."
-                )
-            )
-        } else {
-            return listOf(
-                QuestionItem(
-                    number = 1,
                     sectionName = "General Aptitude",
-                    type = "MCQ",
-                    marks = 1,
-                    negativeMarks = 0.33,
-                    topic = "Verbal Aptitude",
-                    questionText = "Identify the word that is an antonym for 'EPHEMERAL':",
-                    options = listOf("A) Transient", "B) Fleeting", "C) Permanent", "D) Momentary"),
-                    correctAnswer = "C) Permanent",
-                    explanation = "Ephemeral means lasting for a very short time. Permanent means lasting indefinitely."
+                    type = "NAT",
+                    marks = 2,
+                    negativeMarks = 0.0,
+                    topic = "Quantitative Aptitude",
+                    questionText = "A sequence of numbers satisfies x_(n+1) = 2*x_n + 1 with x_0 = 1. The value of x_5 is _______.",
+                    options = emptyList(),
+                    correctAnswer = "63",
+                    explanation = "x_0=1, x_1=3, x_2=7, x_3=15, x_4=31, x_5=63 (General form: 2^(n+1) - 1)."
                 ),
                 QuestionItem(
-                    number = 2,
-                    sectionName = "Algorithms & Data Structures",
+                    number = 3,
+                    sectionName = "Computer Science Core",
                     type = "MCQ",
                     marks = 2,
                     negativeMarks = 0.66,
-                    topic = "Divide and Conquer",
-                    questionText = "The recurrence relation T(n) = 2T(n/2) + n*log(n) with T(1) = 1 has an asymptotic time complexity of:",
+                    topic = "Algorithms & Data Structures",
+                    questionText = "What is the worst-case running time of QuickSort on an array of n elements when median-of-three partitioning is used?",
+                    options = listOf("A) O(n log n)", "B) O(n^2)", "C) O(n)", "D) O(n^(1.5))"),
+                    correctAnswer = "B",
+                    explanation = "Even with median-of-three pivot selection, pathological adversarial inputs can still yield O(n^2) worst-case time."
+                ),
+                QuestionItem(
+                    number = 4,
+                    sectionName = "Computer Science Core",
+                    type = "MSQ",
+                    marks = 2,
+                    negativeMarks = 0.0,
+                    topic = "Operating Systems",
+                    questionText = "Which of the following conditions are necessary for a deadlock to occur in a system with non-shareable resources?",
                     options = listOf(
-                        "A) Theta(n * log(n))",
-                        "B) Theta(n * log^2(n))",
-                        "C) Theta(n^2)",
-                        "D) Theta(n^2 * log(n))"
+                        "A) Mutual Exclusion",
+                        "B) Hold and Wait",
+                        "C) No Preemption",
+                        "D) Circular Wait"
                     ),
-                    correctAnswer = "B) Theta(n * log^2(n))",
-                    explanation = "By extended Master Theorem: a=2, b=2, log_b(a) = log_2(2) = 1. f(n) = n^1 * log^1(n). Since f(n) = Theta(n^(log_b a) * log^k n) with k=1, T(n) = Theta(n * log^(k+1) n) = Theta(n * log^2(n))."
+                    correctAnswer = "A, B, C, D",
+                    explanation = "All four Coffman conditions (Mutual exclusion, Hold and wait, No preemption, and Circular wait) are simultaneously necessary."
+                ),
+                QuestionItem(
+                    number = 5,
+                    sectionName = "Computer Science Core",
+                    type = "NAT",
+                    marks = 2,
+                    negativeMarks = 0.0,
+                    topic = "Computer Networks",
+                    questionText = "A TCP connection uses an RTT of 20 ms with a maximum segment size (MSS) of 1 KB. If the congestion window is 16 KB, what is the maximum achievable throughput in Mbps? (Enter integer value)",
+                    options = emptyList(),
+                    correctAnswer = "6.4",
+                    explanation = "Throughput = (Window Size) / RTT = (16 * 1024 * 8 bits) / (0.020 s) = 6.55 Mbps ≈ 6.4 Mbps with standard decimal calculation."
+                )
+            )
+        } else {
+            listOf(
+                QuestionItem(
+                    number = 1,
+                    sectionName = "General Aptitude",
+                    type = "MCQ",
+                    marks = 1,
+                    negativeMarks = 0.33,
+                    topic = "Analytical Reasoning",
+                    questionText = "In a bivariate dataset, if the Pearson correlation coefficient r is 0, this implies:",
+                    options = listOf(
+                        "A) Variables are completely independent",
+                        "B) No linear association exists between the variables",
+                        "C) The scatter plot is a horizontal straight line",
+                        "D) Both variables have zero variance"
+                    ),
+                    correctAnswer = "B",
+                    explanation = "Zero Pearson correlation specifically indicates the absence of a linear relationship; non-linear associations may still exist."
+                ),
+                QuestionItem(
+                    number = 2,
+                    sectionName = "Data Science Core",
+                    type = "MCQ",
+                    marks = 2,
+                    negativeMarks = 0.66,
+                    topic = "Machine Learning",
+                    questionText = "Which loss function is strictly convex and commonly used for training Binary Logistic Regression models?",
+                    options = listOf(
+                        "A) Mean Squared Error",
+                        "B) Binary Cross-Entropy (Log Loss)",
+                        "C) Hinge Loss",
+                        "D) Huber Loss"
+                    ),
+                    correctAnswer = "B",
+                    explanation = "Binary Cross-Entropy (Negative Log Likelihood) is strictly convex for linear combinations, ensuring a single global minimum."
+                ),
+                QuestionItem(
+                    number = 3,
+                    sectionName = "Data Science Core",
+                    type = "NAT",
+                    marks = 2,
+                    negativeMarks = 0.0,
+                    topic = "Probability & Statistics",
+                    questionText = "A fair coin is tossed 4 times independently. The probability of getting at least 3 heads is _______ (round off to 4 decimal places).",
+                    options = emptyList(),
+                    correctAnswer = "0.3125",
+                    explanation = "P(X >= 3) = (4C3 + 4C4) / 2^4 = (4 + 1)/16 = 5/16 = 0.3125."
+                ),
+                QuestionItem(
+                    number = 4,
+                    sectionName = "Artificial Intelligence Core",
+                    type = "MSQ",
+                    marks = 2,
+                    negativeMarks = 0.0,
+                    topic = "Search Algorithms",
+                    questionText = "Which properties are true for A* tree search with heuristic function h(n)?",
+                    options = listOf(
+                        "A) A* is optimal if h(n) is admissible",
+                        "B) A* is complete on finite graphs with positive step costs",
+                        "C) If h(n) = 0 for all nodes, A* behaves like Breadth-First Search",
+                        "D) Consistent heuristics are always admissible"
+                    ),
+                    correctAnswer = "A, B, D",
+                    explanation = "When h(n)=0, A* behaves like Uniform Cost Search (Dijkstra), not BFS (unless all edge costs are uniform). A, B, and D are true."
                 )
             )
         }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GATE Papers</string>
-    <string name="app_description">Official GATE CS and GATE DA Past Year Question Papers (PYQ 2013-2026) with offline PDF reader, year-based sorting, Room progress tracker, and print support by Pushpak Jaiswal.</string>
-    <string name="app_keywords">GATE CS, GATE DA, GATE Computer Science, GATE Data Science, GATE Artificial Intelligence, GATE PYQ, GATE 2026, GATE 2025, GATE 2024, GATE 2023, GATE 2022, GATE 2021, GATE 2020, GATE 2019, GATE 2018, GATE 2017, GATE 2016, GATE 2015, GATE 2014, GATE 2013, GATE Previous Year Question Papers, GATE PDF Reader, GATE Preparation, Pushpak Jaiswal</string>
-    <string name="sort_year_desc">Year: 2026 → 2013 (Newest)</string>
-    <string name="sort_year_asc">Year: 2013 → 2026 (Oldest)</string>
+    <string name="app_description">Official GATE CS and GATE DA Past Year Question Papers (PYQs) with offline PDF reader, year-based sorting, Room progress tracker, and print support by Pushpak Jaiswal.</string>
+    <string name="app_keywords">GATE CS, GATE DA, GATE Computer Science, GATE Data Science, GATE Artificial Intelligence, GATE PYQ, GATE Previous Year Question Papers, GATE PDF Reader, GATE Preparation, Pushpak Jaiswal</string>
+    <string name="sort_year_desc">Year: Newest First</string>
+    <string name="sort_year_asc">Year: Oldest First</string>
 </resources>

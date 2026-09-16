@@ -77,13 +77,14 @@ object UpdateChecker {
                 }
             }
 
-            val cleanTag = tagName.removePrefix("v").removePrefix("V")
-            val isNewer = isVersionNewer(cleanTag, currentVersionName)
+            val normalizedTag = com.example.util.VersionUtil.normalize(tagName)
+            val normalizedCurrent = com.example.util.VersionUtil.normalize(currentVersionName)
+            val isNewer = isVersionNewer(normalizedTag, normalizedCurrent)
 
             val releaseInfo = AppReleaseInfo(
-                tagName = tagName,
-                versionName = cleanTag,
-                releaseTitle = if (releaseTitle.isNotEmpty()) releaseTitle else "GATE Papers $tagName",
+                tagName = "v$normalizedTag",
+                versionName = normalizedTag,
+                releaseTitle = if (releaseTitle.isNotEmpty()) releaseTitle else "GATE Papers v$normalizedTag",
                 releaseNotes = releaseNotes,
                 publishedAt = publishedAt,
                 apkDownloadUrl = apkUrl,

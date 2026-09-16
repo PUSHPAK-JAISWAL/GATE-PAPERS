@@ -45,4 +45,7 @@ interface PaperDao {
 
     @Query("UPDATE papers SET status = 'UNATTEMPTED', completedAt = NULL, isFlaggedToRevisit = 0")
     suspend fun resetAllProgress()
+
+    @Query("DELETE FROM papers WHERE id NOT IN (:validIds)")
+    suspend fun deletePapersNotIn(validIds: List<String>)
 }

@@ -442,8 +442,13 @@ fun HomeScreen(
                                     modifier = Modifier.size(13.dp)
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
+                                val minYearFmt = String.format("%02d", state.minYear % 100)
+                                val maxYearFmt = String.format("%02d", state.maxYear % 100)
                                 Text(
-                                    text = if (state.sortOrder == SortOrder.YEAR_DESC) "Year ↓ (2026-13)" else "Year ↑ (2013-26)",
+                                    text = if (state.sortOrder == SortOrder.YEAR_DESC)
+                                        "Year ↓ (${state.maxYear}-$minYearFmt)"
+                                    else
+                                        "Year ↑ ($minYearFmt-$maxYearFmt)",
                                     color = TextPrimary,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold

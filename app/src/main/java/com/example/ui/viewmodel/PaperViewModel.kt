@@ -80,6 +80,18 @@ data class PapersUiState(
     val appVersionName: String = BuildConfig.VERSION_NAME,
     val appVersionCode: Int = BuildConfig.VERSION_CODE
 ) {
+    val minYear: Int
+        get() = papers.minOfOrNull { it.year } ?: 2007
+
+    val maxYear: Int
+        get() = papers.maxOfOrNull { it.year } ?: 2026
+
+    val yearRange: String
+        get() = "$minYear–$maxYear"
+
+    val normalizedVersion: String
+        get() = com.example.util.VersionUtil.normalize(appVersionName)
+
     companion object {
         const val SECTION_ALL = "ALL"
         const val SECTION_CS = "GATE CS"

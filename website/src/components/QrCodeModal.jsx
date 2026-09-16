@@ -1,13 +1,14 @@
 import React from 'react';
 import { X, Smartphone, Download, ExternalLink, CheckCircle } from 'lucide-react';
-import { APP_CONFIG } from '../data/papersData';
+import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 export default function QrCodeModal({ isOpen, onClose }) {
+  const { stats, config } = useDynamicPapers();
   if (!isOpen) return null;
 
-  // We can use a free, fast, reliable QR code generator image API or fallback direct link
+  const downloadUrl = config.apkDirectUrl || 'https://github.com/PUSHPAK-JAISWAL/gate-papers/releases/latest/download/GATE-Papers.apk';
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
-    APP_CONFIG.apkDirectUrl
+    downloadUrl
   )}&bgcolor=0A0E17&color=F97316&margin=1`;
 
   return (
@@ -46,7 +47,7 @@ export default function QrCodeModal({ isOpen, onClose }) {
         <div className="space-y-2 mb-6 text-left bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-300">
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Direct APK: <strong>{APP_CONFIG.apkName}</strong> (~{APP_CONFIG.apkSize})</span>
+            <span>Direct APK: <strong>{config.apkName || 'GATE-Papers.apk'}</strong> (~{stats.apkSize})</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -54,21 +55,21 @@ export default function QrCodeModal({ isOpen, onClose }) {
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Zero malware, open source & cryptographically signed</span>
+            <span>Version {stats.version} • Open source & cryptographically signed</span>
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2.5">
           <a
-            href={APP_CONFIG.apkDirectUrl}
+            href={downloadUrl}
             className="flex-1 inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm transition-colors shadow-md shadow-orange-500/20"
           >
             <Download className="w-4 h-4" />
-            <span>Direct Download Now</span>
+            <span>Direct Download</span>
           </a>
           <button
             onClick={onClose}
-            className="sm:w-28 py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl text-sm transition-colors"
+            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold transition-colors"
           >
             Close
           </button>

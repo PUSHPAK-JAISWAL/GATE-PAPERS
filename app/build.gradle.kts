@@ -17,9 +17,15 @@ android {
     applicationId = "com.aistudio.gatepapers.pushpak"
     minSdk = 24
     targetSdk = 36
-    val runNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
-    versionCode = 1 + runNumber
-    versionName = "1.0.$runNumber"
+    val rawRun = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 12
+    // Versioning rule: 1-x.0-9.0-9 (major >= 1, minor strictly 0..9, patch strictly 0..9)
+    // Avoids double-digit points like 1.0.37 or 1.0.12 (e.g. 12 -> 1.1.2, 37 -> 1.3.7)
+    val major = 1 + (rawRun / 100)
+    val minor = (rawRun / 10) % 10
+    val patch = rawRun % 10
+    val computedVersionName = "$major.$minor.$patch"
+    versionCode = (major * 10000) + (minor * 100) + patch
+    versionName = computedVersionName
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
