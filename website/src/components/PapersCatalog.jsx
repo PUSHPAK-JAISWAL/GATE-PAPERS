@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Search, Download, ExternalLink, Filter, Calendar, Award, Tag } from 'lucide-react';
+import { BookOpen, Search, Download, ExternalLink, Github, FileText, CheckCircle } from 'lucide-react';
 import { PAPERS_DATA, APP_CONFIG } from '../data/papersData';
 
 export default function PapersCatalog({ onDownloadClick }) {
@@ -11,7 +11,7 @@ export default function PapersCatalog({ onDownloadClick }) {
     const matchesSearch = 
       p.title.toLowerCase().includes(search.toLowerCase()) ||
       p.topics.some(t => t.toLowerCase().includes(search.toLowerCase())) ||
-      p.conductedBy.toLowerCase().includes(search.toLowerCase()) ||
+      p.fileName.toLowerCase().includes(search.toLowerCase()) ||
       p.year.toString().includes(search);
     return matchesDisc && matchesSearch;
   });
@@ -24,22 +24,23 @@ export default function PapersCatalog({ onDownloadClick }) {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold uppercase tracking-wider mb-3">
               <BookOpen className="w-3.5 h-3.5" />
-              Verified Repository
+              Pushpak Jaiswal's Verified Repositories
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Official Papers Included in the App
+              Authentic Question Papers Included ({PAPERS_DATA.length})
             </h2>
             <p className="text-slate-400 text-sm sm:text-base mt-2 max-w-2xl">
-              All question papers are sourced directly from organizing IITs and IISc. Install the app to read, track, and print all these papers offline on your phone.
+              All question papers are directly synchronized from authentic repositories (<a href={APP_CONFIG.gateCsRepo} target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:underline">gatecs</a> & <a href={APP_CONFIG.gateDaRepo} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">gateda</a>).
+              Zero altered scans, zero watermarks, and 100% verified question papers.
             </p>
           </div>
 
           {/* Discipline Filters */}
           <div className="flex items-center gap-2 bg-[#111726] p-1.5 rounded-xl border border-slate-800 shrink-0">
             {[
-              { id: 'ALL', label: 'All Papers' },
-              { id: 'CS', label: 'Computer Science (CS)' },
-              { id: 'DA', label: 'Data Science & AI (DA)' }
+              { id: 'ALL', label: `All Papers (${PAPERS_DATA.length})` },
+              { id: 'CS', label: `GATE CS (${APP_CONFIG.csPapersCount})` },
+              { id: 'DA', label: `GATE DA (${APP_CONFIG.daPapersCount})` }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -61,10 +62,10 @@ export default function PapersCatalog({ onDownloadClick }) {
           <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
           <input
             type="text"
-            placeholder="Search by topic, year, or organizing IIT..."
+            placeholder="Search by file name (e.g. 2026, CS1, DA)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#111726] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-orange-500"
+            className="w-full bg-[#111726] text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-orange-500 font-mono"
           />
         </div>
 
@@ -77,31 +78,32 @@ export default function PapersCatalog({ onDownloadClick }) {
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span
-                    className={`text-xs font-bold px-2.5 py-1 rounded-md font-mono ${
-                      paper.code === 'CS'
-                        ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-                        : 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-                    }`}
-                  >
-                    GATE {paper.code} {paper.year}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-xs font-bold px-2.5 py-1 rounded-md font-mono ${
+                        paper.code === 'CS'
+                          ? 'bg-orange-500/10 text-orange-400 border border-orange-500/30'
+                          : 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
+                      }`}
+                    >
+                      {paper.section}
+                    </span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">
+                      {paper.year}
+                    </span>
+                  </div>
                   <span className="text-xs text-slate-400 font-mono">
-                    {paper.session}
+                    {paper.fileSize}
                   </span>
                 </div>
 
-                <h4 className="text-base font-bold text-white mb-2 group-hover:text-orange-400 transition-colors">
-                  {paper.title}
+                <h4 className="text-base font-bold text-white font-mono mb-1 group-hover:text-orange-400 transition-colors">
+                  {paper.fileName}
                 </h4>
 
-                <div className="flex items-center gap-4 text-xs text-slate-400 mb-4 font-medium">
-                  <span>🏛️ {paper.conductedBy}</span>
-                  <span>•</span>
-                  <span>{paper.questions} Questions</span>
-                  <span>•</span>
-                  <span>{paper.maxMarks} Marks</span>
-                </div>
+                <p className="text-xs text-slate-400 mb-3 font-mono">
+                  repo: {paper.githubRepo}
+                </p>
 
                 {/* Topics covered */}
                 <div className="flex flex-wrap gap-1.5 mb-6">
@@ -117,22 +119,25 @@ export default function PapersCatalog({ onDownloadClick }) {
               </div>
 
               {/* Card Footer Actions */}
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                <button
-                  onClick={onDownloadClick}
-                  className="text-xs text-orange-400 font-semibold hover:text-orange-300 flex items-center gap-1.5"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Open in App</span>
-                </button>
+              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
                 <a
-                  href={paper.officialUrl}
+                  href={paper.rawUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-slate-500 hover:text-slate-300 flex items-center gap-1"
+                  className="text-xs text-orange-400 font-semibold hover:text-orange-300 flex items-center gap-1.5"
                 >
-                  <span>Official Portal</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <FileText className="w-3.5 h-3.5" />
+                  <span>Raw PDF</span>
+                </a>
+                <a
+                  href={paper.repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 font-mono"
+                >
+                  <Github className="w-3 h-3" />
+                  <span>GitHub File</span>
+                  <ExternalLink className="w-2.5 h-2.5 ml-0.5 text-slate-500" />
                 </a>
               </div>
             </div>
@@ -141,16 +146,16 @@ export default function PapersCatalog({ onDownloadClick }) {
 
         {/* CTA Bottom Banner */}
         <div className="text-center p-8 rounded-2xl bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-cyan-500/10 border border-orange-500/20 max-w-4xl mx-auto">
-          <h3 className="text-xl font-bold text-white mb-2">Want to solve all these papers offline?</h3>
+          <h3 className="text-xl font-bold text-white mb-2">Want to practice and solve all 27 papers offline?</h3>
           <p className="text-sm text-slate-300 mb-6 max-w-xl mx-auto">
-            Get the full GATE Papers APK directly on your device. Cache papers with one touch and practice anywhere.
+            Get the full GATE Papers APK directly on your Android phone. Built-in PDF reader, offline SQLite caching, preparation tracker, and print spooling.
           </p>
           <button
             onClick={onDownloadClick}
             className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5"
           >
             <Download className="w-4 h-4" />
-            <span>Download GATE Papers APK</span>
+            <span>Download GATE Papers APK ({APP_CONFIG.version})</span>
           </button>
         </div>
       </div>

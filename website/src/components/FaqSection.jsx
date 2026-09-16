@@ -3,8 +3,8 @@ import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
 const FAQS = [
   {
-    q: 'Are the question papers official and authentic?',
-    a: 'Yes, 100%. All question papers are sourced directly from the official organizing institutes of GATE across respective years (IISc Bangalore, IIT Kanpur, IIT Kharagpur, IIT Bombay, IIT Delhi, IIT Madras). No unofficial, altered, or watermarked scans are included.'
+    q: 'Are the question papers authentic and accurate?',
+    a: 'Yes, 100%. All question papers are sourced directly from Pushpak Jaiswal\'s verified GitHub repositories (gatecs and gateda), identical to the papers used in the Android application. No unofficial, altered, or third-party watermarked scans are included.'
   },
   {
     q: 'Can I read and practice papers completely offline?',
@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: 'Why does Android display "Install unknown apps"?',
-    a: 'Because you are downloading the APK directly from our official website instead of the Google Play Store, Android shows a standard security caution. This is normal for all direct APK installs. The app is completely open source, contains zero tracking or adware, and you can inspect every line of code on our public GitHub repository.'
+    a: 'Because you are downloading the APK directly from GitHub Releases instead of the Google Play Store, Android shows a standard security prompt. This is normal for all direct APK installs. The app is completely open source, contains zero tracking or adware, and you can inspect every line of code on Pushpak Jaiswal\'s public GitHub repository.'
   },
   {
     q: 'Which Android versions are supported?',

@@ -83,7 +83,6 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     onCheckUpdates: () -> Unit,
     onOpenUpdatePrompt: () -> Unit,
-    onSimulateUpdate: () -> Unit,
     onSyncRepos: () -> Unit,
     onResetProgress: () -> Unit
 ) {
@@ -293,59 +292,48 @@ fun SettingsDialog(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(14.dp))
 
-                        // Check updates button & status
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        // Check updates button & status (Spacious & Full Width)
+                        Button(
+                            onClick = onCheckUpdates,
+                            enabled = !state.isCheckingUpdate,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = DarkSurfaceVariant,
+                                contentColor = TextPrimary
+                            ),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .testTag("check_updates_button")
                         ) {
-                            Button(
-                                onClick = onCheckUpdates,
-                                enabled = !state.isCheckingUpdate,
-                                colors = ButtonDefaults.buttonColors(containerColor = DarkSurfaceVariant),
-                                shape = RoundedCornerShape(10.dp),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .height(42.dp)
-                                    .testTag("check_updates_button")
-                            ) {
-                                if (state.isCheckingUpdate) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(16.dp),
-                                        color = SolidGateOrange,
-                                        strokeWidth = 2.dp
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Checking...", color = TextPrimary, fontSize = 12.sp)
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Default.Refresh,
-                                        contentDescription = null,
-                                        tint = TextPrimary,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Check for Updates", color = TextPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                                }
-                            }
-
-                            // Test simulation button
-                            OutlinedButton(
-                                onClick = onSimulateUpdate,
-                                shape = RoundedCornerShape(10.dp),
-                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
-                                modifier = Modifier.height(42.dp).testTag("simulate_update_btn")
-                            ) {
-                                Text("Test Prompt", color = SolidGateCyan, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            if (state.isCheckingUpdate) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(18.dp),
+                                    color = SolidGateOrange,
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text("Checking for updates...", color = TextPrimary, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = null,
+                                    tint = SolidGateOrange,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Check for Updates", color = TextPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                             }
                         }
 
                         if (state.updateStatusMessage != null) {
-                            Spacer(modifier = Modifier.height(6.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = state.updateStatusMessage,
-                                fontSize = 11.sp,
+                                fontSize = 11.5.sp,
                                 color = TextMuted
                             )
                         }
@@ -405,54 +393,76 @@ fun SettingsDialog(
 
                     // SECTION 3: DATA & PROGRESS MANAGEMENT
                     SettingsCard(title = "Data & Preparation Tracker", icon = Icons.Default.Sync, iconTint = SolidPurple) {
+                        // Cached papers status
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(DarkSurfaceVariant.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column {
-                                Text(
-                                    text = "Offline Cached Papers",
-                                    fontSize = 12.sp,
-                                    color = TextMuted
-                                )
-                                Text(
-                                    text = "${state.papers.size} papers ready offline",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = TextPrimary
-                                )
-                            }
+                            Text(
+                                text = "Offline Cached Papers",
+                                fontSize = 12.sp,
+                                color = TextMuted
+                            )
+                            Text(
+                                text = "${state.papers.size} papers ready offline",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary
+                            )
+                        }
 
-                            OutlinedButton(
-                                onClick = onSyncRepos,
-                                enabled = !state.isSyncing,
-                                shape = RoundedCornerShape(8.dp),
-                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
-                                modifier = Modifier.height(36.dp)
-                            ) {
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Sync Repositories Button (Clear & Spacious)
+                        OutlinedButton(
+                            onClick = onSyncRepos,
+                            enabled = !state.isSyncing,
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = DarkSurfaceVariant.copy(alpha = 0.4f),
+                                contentColor = TextPrimary
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp)
+                                .testTag("settings_sync_repos_btn")
+                        ) {
+                            if (state.isSyncing) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    color = SolidEmerald,
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Syncing with GitHub...", fontSize = 12.5.sp, color = TextPrimary)
+                            } else {
                                 Icon(
                                     imageVector = Icons.Default.Sync,
                                     contentDescription = null,
-                                    modifier = Modifier.size(14.dp),
+                                    modifier = Modifier.size(16.dp),
                                     tint = SolidEmerald
                                 )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text("Sync Repos", fontSize = 11.sp, color = TextPrimary)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Sync Question Papers from Repos", fontSize = 12.5.sp, color = TextPrimary, fontWeight = FontWeight.SemiBold)
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(14.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        // Reset progress button
+                        // Reset Progress Button (Clear & Spacious)
                         Button(
                             onClick = { showResetConfirmation = true },
-                            colors = ButtonDefaults.buttonColors(containerColor = SolidRose.copy(alpha = 0.15f)),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, SolidRose.copy(alpha = 0.5f)),
-                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = SolidRose.copy(alpha = 0.12f)),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, SolidRose.copy(alpha = 0.4f)),
+                            shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(40.dp)
+                                .height(46.dp)
                                 .testTag("reset_progress_button")
                         ) {
                             Icon(
@@ -461,11 +471,11 @@ fun SettingsDialog(
                                 tint = SolidRose,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Reset Solved Progress",
+                                text = "Reset Solved Preparation Progress",
                                 color = SolidRose,
-                                fontSize = 12.sp,
+                                fontSize = 12.5.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }

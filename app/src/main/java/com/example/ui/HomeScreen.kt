@@ -125,7 +125,6 @@ fun HomeScreen(
             onDismiss = { viewModel.closeSettings() },
             onCheckUpdates = { viewModel.checkForUpdates(silent = false) },
             onOpenUpdatePrompt = { viewModel.openUpdateDialog() },
-            onSimulateUpdate = { viewModel.simulateNewReleaseForTesting() },
             onSyncRepos = { viewModel.syncWithGitHub() },
             onResetProgress = { viewModel.resetAllProgress() }
         )
@@ -141,17 +140,8 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
-            contentPadding = PaddingValues(bottom = 28.dp)
+            contentPadding = PaddingValues(top = 8.dp, bottom = 28.dp)
         ) {
-            // Header Top spacing & Insets
-            item {
-                Spacer(
-                    modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .height(8.dp)
-                )
-            }
-
             // --- Top App Header Row (Branding & Settings Action) ---
             item {
                 Row(

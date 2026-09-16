@@ -159,6 +159,216 @@ object DefaultPapers {
                 coreTopics = "Computer Science & IT Official Paper"
             )
         )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2019_CS2.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2019,
+                title = "2019_CS2.pdf",
+                subtitle = "1.8 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 2,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2019_CS2.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2019_CS2.pdf",
+                fileSizeBytes = 1887436L,
+                coreTopics = "Computer Science & IT Shift 2"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2019_CS1.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2019,
+                title = "2019_CS1.pdf",
+                subtitle = "1.9 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2019_CS1.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2019_CS1.pdf",
+                fileSizeBytes = 1992294L,
+                coreTopics = "Computer Science & IT Shift 1"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2018_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2018,
+                title = "2018_CS.pdf",
+                subtitle = "1.2 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2018_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2018_CS.pdf",
+                fileSizeBytes = 1258291L,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2017_CS2.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2017,
+                title = "2017_CS2.pdf",
+                subtitle = "1.4 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 2,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2017_CS2.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2017_CS2.pdf",
+                fileSizeBytes = 1468006L,
+                coreTopics = "Computer Science & IT Shift 2"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2017_CS1.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2017,
+                title = "2017_CS1.pdf",
+                subtitle = "1.3 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2017_CS1.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2017_CS1.pdf",
+                fileSizeBytes = 1363148L,
+                coreTopics = "Computer Science & IT Shift 1"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2016_CS2.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2016,
+                title = "2016_CS2.pdf",
+                subtitle = "1.1 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 2,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2016_CS2.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2016_CS2.pdf",
+                fileSizeBytes = 1153433L,
+                coreTopics = "Computer Science & IT Shift 2"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2016_CS1.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2016,
+                title = "2016_CS1.pdf",
+                subtitle = "1.1 MB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2016_CS1.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2016_CS1.pdf",
+                fileSizeBytes = 1153433L,
+                coreTopics = "Computer Science & IT Shift 1"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2015_CS3.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2015,
+                title = "2015_CS3.pdf",
+                subtitle = "950 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 3,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2015_CS3.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS3.pdf",
+                fileSizeBytes = 972800L,
+                coreTopics = "Computer Science & IT Shift 3"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2015_CS2.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2015,
+                title = "2015_CS2.pdf",
+                subtitle = "980 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 2,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2015_CS2.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS2.pdf",
+                fileSizeBytes = 1003520L,
+                coreTopics = "Computer Science & IT Shift 2"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2015_CS1.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2015,
+                title = "2015_CS1.pdf",
+                subtitle = "960 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2015_CS1.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2015_CS1.pdf",
+                fileSizeBytes = 983040L,
+                coreTopics = "Computer Science & IT Shift 1"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2014_CS3.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2014,
+                title = "2014_CS3.pdf",
+                subtitle = "890 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 3,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2014_CS3.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS3.pdf",
+                fileSizeBytes = 911360L,
+                coreTopics = "Computer Science & IT Shift 3"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2014_CS2.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2014,
+                title = "2014_CS2.pdf",
+                subtitle = "910 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 2,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2014_CS2.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS2.pdf",
+                fileSizeBytes = 931840L,
+                coreTopics = "Computer Science & IT Shift 2"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2014_CS1.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2014,
+                title = "2014_CS1.pdf",
+                subtitle = "920 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2014_CS1.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2014_CS1.pdf",
+                fileSizeBytes = 942080L,
+                coreTopics = "Computer Science & IT Shift 1"
+            )
+        )
+        list.add(
+            PaperEntity(
+                id = "gatecs_2013_CS.pdf",
+                section = PaperEntity.SECTION_CS,
+                year = 2013,
+                title = "2013_CS.pdf",
+                subtitle = "750 KB • PUSHPAK-JAISWAL/gatecs",
+                setNumber = 1,
+                githubRepo = "PUSHPAK-JAISWAL/gatecs",
+                githubFileName = "2013_CS.pdf",
+                rawFileUrl = "https://raw.githubusercontent.com/PUSHPAK-JAISWAL/gatecs/main/2013_CS.pdf",
+                fileSizeBytes = 768000L,
+                coreTopics = "Computer Science & IT Official Paper"
+            )
+        )
 
         // ================= GATE DA PAPERS (From https://github.com/PUSHPAK-JAISWAL/gateda) =================
         list.add(
