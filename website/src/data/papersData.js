@@ -585,8 +585,15 @@ export const APP_CONFIG = {
   daPapersCount: 3,
   githubAuthor: 'PUSHPAK-JAISWAL',
   authorEmail: 'pushpakmjaiswal@gmail.com',
+  author: {
+    name: 'Pushpak Jaiswal',
+    github: 'PUSHPAK-JAISWAL',
+    githubUrl: 'https://github.com/PUSHPAK-JAISWAL',
+    email: 'pushpakmjaiswal@gmail.com'
+  },
   gateCsRepo: 'https://github.com/PUSHPAK-JAISWAL/gatecs',
   gateDaRepo: 'https://github.com/PUSHPAK-JAISWAL/gateda',
+  releasesUrl: 'https://github.com/PUSHPAK-JAISWAL/gate-papers/releases',
   downloadApkUrl: 'https://github.com/PUSHPAK-JAISWAL/gate-papers/releases/latest/download/GATE-Papers.apk',
   apkDirectUrl: 'https://github.com/PUSHPAK-JAISWAL/gate-papers/releases/latest/download/GATE-Papers.apk',
   repoUrl: 'https://github.com/PUSHPAK-JAISWAL/gate-papers',

@@ -1,8 +1,14 @@
 import React from 'react';
 import { BookOpen, Github, Mail, Heart, ArrowUp } from 'lucide-react';
 import { APP_CONFIG } from '../data/papersData';
+import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 export default function Footer() {
+  const { config } = useDynamicPapers();
+  const repoUrl = config?.repoUrl || APP_CONFIG.repoUrl || 'https://github.com/PUSHPAK-JAISWAL/gate-papers';
+  const authorGithubUrl = config?.author?.githubUrl || APP_CONFIG.author?.githubUrl || 'https://github.com/PUSHPAK-JAISWAL';
+  const authorEmail = config?.author?.email || APP_CONFIG.author?.email || 'pushpakmjaiswal@gmail.com';
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -32,7 +38,7 @@ export default function Footer() {
             <a href="#install" className="hover:text-white transition-colors">Install Guide</a>
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
             <a
-              href={`${APP_CONFIG.repoUrl}/blob/main/LICENSE`}
+              href={`${repoUrl}/blob/main/LICENSE`}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors"
@@ -58,7 +64,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <a
-              href={APP_CONFIG.author.githubUrl}
+              href={authorGithubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-slate-300 transition-colors flex items-center gap-1"
@@ -67,7 +73,7 @@ export default function Footer() {
               <span>@PUSHPAK-JAISWAL</span>
             </a>
             <a
-              href={`mailto:${APP_CONFIG.author.email}`}
+              href={`mailto:${authorEmail}`}
               className="hover:text-slate-300 transition-colors flex items-center gap-1"
             >
               <Mail className="w-4 h-4" />
