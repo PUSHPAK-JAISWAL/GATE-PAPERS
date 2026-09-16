@@ -1,6 +1,6 @@
 {
   "name": "GATE Papers",
-  "description": "Question papers and progress tracker for GATE CS and GATE DA.",
+  "description": "Official GATE CS & GATE DA Question Papers (PYQ 2013-2026) with offline PDF reader, year/name sorting, Room progress tracker, and print support by Pushpak Jaiswal.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

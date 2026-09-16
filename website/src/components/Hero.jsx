@@ -16,12 +16,12 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
             <span className="flex h-2 w-2 rounded-full bg-orange-500 animate-ping" />
             <span>Latest Release {APP_CONFIG.version} is Live</span>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-300">GATE CS & DA 2019–2024</span>
+            <span className="text-slate-300 font-semibold">GATE CS & DA 2013–2026 (27 Authentic Papers)</span>
           </div>
 
           {/* Main Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-6">
-            Master GATE Papers with{' '}
+            Official GATE Papers (2013–2026) with{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500">
               Zero Distractions
             </span>
@@ -29,8 +29,8 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
 
           {/* Subtitle */}
           <p className="text-lg sm:text-xl text-slate-300 mb-10 leading-relaxed max-w-2xl mx-auto">
-            The free, open-source Android study companion for <strong>GATE CS & DA</strong> candidates. 
-            Native in-app PDF rendering, local offline storage, solved progress tracking, and wireless printing.
+            The free, open-source Android study companion for <strong>GATE CS (Computer Science)</strong> & <strong>GATE DA (Data Science & AI)</strong> aspirants. 
+            Native in-app PDF rendering, 100% authentic past year question papers (PYQs), year/name sorting, offline Room database, solved progress tracking, and wireless printing.
           </p>
 
           {/* Download & Action Buttons */}

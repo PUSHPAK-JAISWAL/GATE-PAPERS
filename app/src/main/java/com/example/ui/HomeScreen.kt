@@ -33,6 +33,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Download
@@ -40,6 +42,7 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sync
+import com.example.ui.viewmodel.SortOrder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -419,24 +422,55 @@ fun HomeScreen(
                         }
                     }
 
-                    if (state.selectedStatusFilter != PapersUiState.STATUS_ALL ||
-                        state.selectedSection != PapersUiState.SECTION_ALL ||
-                        state.searchQuery.isNotEmpty()
-                    ) {
-                        Text(
-                            text = "Reset Filter",
-                            color = SolidGateOrange,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        // Interactive Year Sort Toggle Button
+                        Box(
                             modifier = Modifier
-                                .clickable {
-                                    viewModel.selectSection(PapersUiState.SECTION_ALL)
-                                    viewModel.selectStatusFilter(PapersUiState.STATUS_ALL)
-                                    viewModel.onSearchQueryChange("")
-                                }
-                                .padding(4.dp)
-                                .testTag("reset_filters_btn")
-                        )
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(DarkSurfaceVariant)
+                                .border(1.dp, SolidGateOrange.copy(alpha = 0.35f), RoundedCornerShape(8.dp))
+                                .clickable { viewModel.toggleSortOrder() }
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                .testTag("sort_papers_toggle_btn")
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = if (state.sortOrder == SortOrder.YEAR_DESC)
+                                        Icons.Default.ArrowDownward else Icons.Default.ArrowUpward,
+                                    contentDescription = "Sort papers by year",
+                                    tint = SolidGateOrange,
+                                    modifier = Modifier.size(13.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = if (state.sortOrder == SortOrder.YEAR_DESC) "Year ↓ (2026-13)" else "Year ↑ (2013-26)",
+                                    color = TextPrimary,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                        if (state.selectedStatusFilter != PapersUiState.STATUS_ALL ||
+                            state.selectedSection != PapersUiState.SECTION_ALL ||
+                            state.searchQuery.isNotEmpty()
+                        ) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Reset",
+                                color = SolidGateOrange,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.selectSection(PapersUiState.SECTION_ALL)
+                                        viewModel.selectStatusFilter(PapersUiState.STATUS_ALL)
+                                        viewModel.onSearchQueryChange("")
+                                    }
+                                    .padding(4.dp)
+                                    .testTag("reset_filters_btn")
+                            )
+                        }
                     }
                 }
             }

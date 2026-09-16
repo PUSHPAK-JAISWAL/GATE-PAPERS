@@ -3,15 +3,22 @@ import {
   Search, BookOpen, CheckCircle, Clock, ArrowLeft, 
   Printer, ZoomIn, ZoomOut, Share2, Sparkles, Filter, Settings,
   RotateCcw, Bookmark, FileText, Check, X, RefreshCw, ExternalLink,
-  Code, Cpu, BarChart2, ShieldCheck, Mail, Github, Trash2
+  Code, Cpu, BarChart2, ShieldCheck, Mail, Github, Trash2,
+  ArrowDown, ArrowUp
 } from 'lucide-react';
 import { PAPERS_DATA, APP_CONFIG } from '../data/papersData';
+
+function extractYear(fileName, fallbackYear) {
+  const match = fileName.match(/(19\d{2}|20\d{2})/);
+  return match ? parseInt(match[1], 10) : (fallbackYear || 0);
+}
 
 export default function AppSimulator() {
   // Initialize state with all 27 authentic papers
   const [papers, setPapers] = useState(PAPERS_DATA);
   const [activeSectionFilter, setActiveSectionFilter] = useState('ALL'); // ALL, CS, DA, PENDING, FINISHED, UNATTEMPTED
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState('year-desc'); // 'year-desc' or 'year-asc'
   const [activeReadingPaper, setActiveReadingPaper] = useState(null);
   const [simulatedPage, setSimulatedPage] = useState(1);
   const [zoomLevel, setZoomLevel] = useState(100);
@@ -101,6 +108,18 @@ export default function AppSimulator() {
     if (activeSectionFilter === 'PENDING') return paper.status === 'pending';
     if (activeSectionFilter === 'UNATTEMPTED') return paper.status === 'unattempted' || !paper.status;
     return true;
+  });
+
+  const sortedPapers = [...filteredPapers].sort((a, b) => {
+    const yearA = extractYear(a.fileName, a.year);
+    const yearB = extractYear(b.fileName, b.year);
+    if (sortOrder === 'year-desc') {
+      if (yearB !== yearA) return yearB - yearA;
+      return b.fileName.localeCompare(a.fileName);
+    } else {
+      if (yearA !== yearB) return yearA - yearB;
+      return a.fileName.localeCompare(b.fileName);
+    }
   });
 
   return (
@@ -374,24 +393,29 @@ export default function AppSimulator() {
                       </div>
                     </div>
 
-                    {/* Question Papers List Heading */}
+                    {/* Question Papers List Heading with Sort Toggle */}
                     <div className="flex items-center justify-between pt-1">
                       <h4 className="text-xs font-bold text-white">
-                        All Question Papers [{filteredPapers.length}]
+                        Question Papers [{sortedPapers.length}]
                       </h4>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        Tap paper to open PDF
-                      </span>
+                      <button
+                        onClick={() => setSortOrder(prev => prev === 'year-desc' ? 'year-asc' : 'year-desc')}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-[#1E293B] border border-orange-500/40 text-[10px] font-bold text-orange-400 hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+                        title="Toggle Year Sort Order"
+                      >
+                        {sortOrder === 'year-desc' ? <ArrowDown className="w-2.5 h-2.5" /> : <ArrowUp className="w-2.5 h-2.5" />}
+                        <span>{sortOrder === 'year-desc' ? 'Year ↓ (2026-13)' : 'Year ↑ (2013-26)'}</span>
+                      </button>
                     </div>
 
                     {/* Question Paper Cards */}
                     <div className="space-y-2.5 pb-6">
-                      {filteredPapers.length === 0 ? (
+                      {sortedPapers.length === 0 ? (
                         <div className="text-center py-10 text-slate-500 text-xs">
                           No papers found matching "{searchQuery}"
                         </div>
                       ) : (
-                        filteredPapers.map(paper => {
+                        sortedPapers.map(paper => {
                           const isDone = paper.status === 'finished';
                           const isPending = paper.status === 'pending';
 

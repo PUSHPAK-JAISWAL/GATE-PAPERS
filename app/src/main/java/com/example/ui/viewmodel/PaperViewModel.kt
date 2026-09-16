@@ -38,10 +38,16 @@ data class ProgressStats(
         get() = if (daTotal > 0) (daFinished * 100) / daTotal else 0
 }
 
+enum class SortOrder {
+    YEAR_DESC, // Newest Year First (e.g. 2026 -> 2013)
+    YEAR_ASC   // Oldest Year First (e.g. 2013 -> 2026)
+}
+
 data class FilterCriteria(
     val section: String = PapersUiState.SECTION_ALL,
     val status: String = PapersUiState.STATUS_ALL,
-    val query: String = ""
+    val query: String = "",
+    val sortOrder: SortOrder = SortOrder.YEAR_DESC
 )
 
 internal data class UpdateUiModel(
@@ -59,6 +65,7 @@ data class PapersUiState(
     val selectedSection: String = SECTION_ALL,
     val selectedStatusFilter: String = STATUS_ALL,
     val searchQuery: String = "",
+    val sortOrder: SortOrder = SortOrder.YEAR_DESC,
     val activePaperForViewing: PaperEntity? = null,
     val stats: ProgressStats = ProgressStats(),
     val isLoading: Boolean = false,
@@ -92,6 +99,7 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
     private val _selectedSection = MutableStateFlow(PapersUiState.SECTION_ALL)
     private val _selectedStatusFilter = MutableStateFlow(PapersUiState.STATUS_ALL)
     private val _searchQuery = MutableStateFlow("")
+    private val _sortOrder = MutableStateFlow(SortOrder.YEAR_DESC)
     private val _activePaperForViewing = MutableStateFlow<PaperEntity?>(null)
     private val _isSyncing = MutableStateFlow(false)
     private val _syncStatusMessage = MutableStateFlow<String?>("Live GitHub Repos Connected")
@@ -122,9 +130,10 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
         val filtersFlow = combine(
             _selectedSection,
             _selectedStatusFilter,
-            _searchQuery
-        ) { section, status, query ->
-            FilterCriteria(section, status, query)
+            _searchQuery,
+            _sortOrder
+        ) { section, status, query, sort ->
+            FilterCriteria(section, status, query, sort)
         }
 
         val syncFlow = combine(_isSyncing, _syncStatusMessage) { syncing, msg ->
@@ -201,6 +210,22 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
                 matchSection && matchStatus && matchQuery
             }
 
+            // Sort according to year (ascending or descending) based on naming convention
+            val sortedPapers = when (filters.sortOrder) {
+                SortOrder.YEAR_DESC -> {
+                    filtered.sortedWith(
+                        compareByDescending<PaperEntity> { extractYearFromName(it.githubFileName, it.year) }
+                            .thenByDescending { it.githubFileName }
+                    )
+                }
+                SortOrder.YEAR_ASC -> {
+                    filtered.sortedWith(
+                        compareBy<PaperEntity> { extractYearFromName(it.githubFileName, it.year) }
+                            .thenBy { it.githubFileName }
+                    )
+                }
+            }
+
             // Sync updated active paper with database state if currently open
             val currentActive = viewingPaper?.let { curr ->
                 allPapers.find { it.id == curr.id } ?: curr
@@ -208,10 +233,11 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
 
             PapersUiState(
                 papers = allPapers,
-                filteredPapers = filtered,
+                filteredPapers = sortedPapers,
                 selectedSection = filters.section,
                 selectedStatusFilter = filters.status,
                 searchQuery = filters.query,
+                sortOrder = filters.sortOrder,
                 activePaperForViewing = currentActive,
                 stats = stats,
                 isSyncing = syncData.first,
@@ -386,5 +412,22 @@ class PaperViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.updateNotes(paperId, notes)
         }
+    }
+
+    fun toggleSortOrder() {
+        _sortOrder.value = if (_sortOrder.value == SortOrder.YEAR_DESC) {
+            SortOrder.YEAR_ASC
+        } else {
+            SortOrder.YEAR_DESC
+        }
+    }
+
+    fun setSortOrder(order: SortOrder) {
+        _sortOrder.value = order
+    }
+
+    private fun extractYearFromName(fileName: String, fallbackYear: Int): Int {
+        val regex = Regex("""(19\d{2}|20\d{2})""")
+        return regex.find(fileName)?.groupValues?.get(1)?.toIntOrNull() ?: fallbackYear
     }
 }

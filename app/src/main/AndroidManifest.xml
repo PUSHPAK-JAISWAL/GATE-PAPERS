@@ -24,7 +24,32 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Deep linking for web & app indexing -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="pushpak-jaiswal.github.io"
+                    android:pathPrefix="/gate-papers" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="gatepapers" />
+            </intent-filter>
         </activity>
+
+        <!-- Search and App Indexing Metadata -->
+        <meta-data
+            android:name="description"
+            android:value="@string/app_description" />
+        <meta-data
+            android:name="keywords"
+            android:value="@string/app_keywords" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
