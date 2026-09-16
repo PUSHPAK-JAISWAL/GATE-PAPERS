@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -102,7 +103,13 @@ fun UpdateNotificationDialog(
 
             result.fold(
                 onSuccess = { apkFile ->
-                    if (InAppUpdateDownloader.canInstallApk(context)) {
+                    val validation = InAppUpdateDownloader.validateDownloadedApk(context, apkFile)
+                    if (validation.hasSignatureConflict) {
+                        downloadState = UpdateDownloadState.SignatureConflict(
+                            apkFile = apkFile,
+                            message = validation.reason ?: "The downloaded release was signed with a different key than this preview build."
+                        )
+                    } else if (InAppUpdateDownloader.canInstallApk(context)) {
                         downloadState = UpdateDownloadState.ReadyToInstall(apkFile)
                         val launched = InAppUpdateDownloader.launchInstaller(context, apkFile)
                         if (!launched) {
@@ -155,12 +162,16 @@ fun UpdateNotificationDialog(
                     Icon(
                         imageVector = when (downloadState) {
                             is UpdateDownloadState.ReadyToInstall -> Icons.Default.CheckCircle
+                            is UpdateDownloadState.SignatureConflict -> Icons.Default.Warning
                             is UpdateDownloadState.Failed -> Icons.Default.ErrorOutline
                             is UpdateDownloadState.NeedsPermission -> Icons.Default.Security
                             else -> Icons.Default.Download
                         },
                         contentDescription = "Update Icon",
-                        tint = SolidGateOrange,
+                        tint = when (downloadState) {
+                            is UpdateDownloadState.SignatureConflict -> Color(0xFFF59E0B)
+                            else -> SolidGateOrange
+                        },
                         modifier = Modifier.size(28.dp)
                     )
                 }
@@ -173,6 +184,7 @@ fun UpdateNotificationDialog(
                         is UpdateDownloadState.Downloading -> "Downloading Update..."
                         is UpdateDownloadState.ReadyToInstall -> "Ready to Install"
                         is UpdateDownloadState.NeedsPermission -> "Permission Needed"
+                        is UpdateDownloadState.SignatureConflict -> "Signature Conflict Detected"
                         is UpdateDownloadState.Failed -> "Download Incomplete"
                         else -> "New Update Available!"
                     },
@@ -370,6 +382,59 @@ fun UpdateNotificationDialog(
                                     fontSize = 11.5.sp,
                                     color = TextSecondary
                                 )
+                            }
+                        }
+                    }
+
+                    is UpdateDownloadState.SignatureConflict -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(DarkBackground)
+                                .border(1.dp, Color(0xFFF59E0B).copy(alpha = 0.5f), RoundedCornerShape(12.dp))
+                                .padding(14.dp)
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Warning,
+                                        contentDescription = null,
+                                        tint = Color(0xFFF59E0B),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Why is this happening?",
+                                        fontSize = 12.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFFF59E0B)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Text(
+                                    text = "Android protects your device by preventing updates when the downloaded release is signed with a different key than your current installed app.",
+                                    fontSize = 11.5.sp,
+                                    color = TextSecondary,
+                                    lineHeight = 16.sp
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "To install cleanly:\n1. Tap 'Save to Downloads' below.\n2. Uninstall this current preview app from phone.\n3. Open Downloads and tap GATE-Papers.apk to install. Future updates will install seamlessly in-app!",
+                                    fontSize = 11.sp,
+                                    color = SolidGateOrange,
+                                    fontWeight = FontWeight.Medium,
+                                    lineHeight = 15.sp
+                                )
+                                if (state.isCopiedToDownloads) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = "✓ Saved to Downloads/GATE-Papers.apk",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF4ADE80)
+                                    )
+                                }
                             }
                         }
                     }
@@ -572,6 +637,76 @@ fun UpdateNotificationDialog(
                                 Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(16.dp))
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(text = "Retry", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+
+                    is UpdateDownloadState.SignatureConflict -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Button(
+                                    onClick = {
+                                        val copied = InAppUpdateDownloader.copyApkToPublicDownloads(context, state.apkFile)
+                                        if (copied) {
+                                            downloadState = state.copy(isCopiedToDownloads = true)
+                                            Toast.makeText(context, "Saved to Downloads/GATE-Papers.apk", Toast.LENGTH_LONG).show()
+                                        } else {
+                                            Toast.makeText(context, "Failed to copy to Downloads", Toast.LENGTH_SHORT).show()
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .weight(1.3f)
+                                        .height(46.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = SolidGateOrange,
+                                        contentColor = Color.White
+                                    )
+                                ) {
+                                    Icon(
+                                        Icons.Default.Download,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = if (state.isCopiedToDownloads) "Saved to Downloads ✓" else "Save to Downloads",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                OutlinedButton(
+                                    onClick = {
+                                        InAppUpdateDownloader.launchInstaller(context, state.apkFile)
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(46.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary)
+                                ) {
+                                    Text(text = "Try Install", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                }
+                            }
+
+                            OutlinedButton(
+                                onClick = onLater,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(42.dp),
+                                shape = RoundedCornerShape(10.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = TextMuted)
+                            ) {
+                                Text(text = "Dismiss", fontSize = 12.sp)
                             }
                         }
                     }
