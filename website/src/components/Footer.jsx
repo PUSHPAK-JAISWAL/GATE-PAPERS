@@ -1,5 +1,6 @@
 import React from 'react';
-import { BookOpen, Github, Mail, Heart, ArrowUp } from 'lucide-react';
+import { BookOpen, Mail, Heart, ArrowUp } from 'lucide-react';
+import { FaGithub as Github } from 'react-icons/fa';
 import { APP_CONFIG } from '../data/papersData';
 import { useDynamicPapers } from '../data/DynamicPapersContext';
 

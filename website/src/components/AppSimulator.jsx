@@ -3,9 +3,10 @@ import {
   Search, BookOpen, CheckCircle, Clock, ArrowLeft, 
   Printer, ZoomIn, ZoomOut, Share2, Sparkles, Filter, Settings,
   RotateCcw, Bookmark, FileText, Check, X, RefreshCw, ExternalLink,
-  Code, Cpu, BarChart2, ShieldCheck, Mail, Github, Trash2,
+  Code, Cpu, BarChart2, ShieldCheck, Mail, Trash2,
   ArrowDown, ArrowUp
 } from 'lucide-react';
+import { FaGithub as Github } from 'react-icons/fa';
 import { PAPERS_DATA, APP_CONFIG } from '../data/papersData';
 import { useDynamicPapers } from '../data/DynamicPapersContext';
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Github, Menu, X, BookOpen, Smartphone, HelpCircle, Layers } from 'lucide-react';
+import { Download, Menu, X, BookOpen, Smartphone, HelpCircle, Layers } from 'lucide-react';
+import { FaGithub as Github } from 'react-icons/fa';
 import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 export default function Navbar({ onDownloadClick }) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { BookOpen, Search, Download, ExternalLink, Github, FileText, CheckCircle, ArrowDownUp, ArrowDown, ArrowUp } from 'lucide-react';
+import { BookOpen, Search, Download, ExternalLink, FileText, CheckCircle, ArrowDownUp, ArrowDown, ArrowUp } from 'lucide-react';
+import { FaGithub as Github } from 'react-icons/fa';
 import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 function extractYear(fileName, fallbackYear) {
