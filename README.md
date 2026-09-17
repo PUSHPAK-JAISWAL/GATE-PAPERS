@@ -13,7 +13,7 @@
 
 <br/>
 
-[🚀 **Visit Official Website & Download**](https://pushpak-jaiswal.github.io/gate-papers/) •
+[🚀 **Visit Official Website & Download**](https://pushpak-jaiswal.github.io/GATE-PAPERS/) •
 [📲 **Direct APK Download**](https://github.com/PUSHPAK-JAISWAL/gate-papers/releases/latest/download/GATE-Papers.apk) •
 [📖 **Documentation**](#-table-of-contents) •
 [🤝 **Contribute**](CONTRIBUTING.md)
@@ -54,7 +54,7 @@ With a single tap, access authentic past year question papers (2019–2024), vie
 
 ### Option 1: Direct Download from Website (Recommended)
 Visit the official interactive web portal:
-👉 **[https://pushpak-jaiswal.github.io/gate-papers/](https://pushpak-jaiswal.github.io/gate-papers/)**
+👉 **[https://pushpak-jaiswal.github.io/GATE-PAPERS/](https://pushpak-jaiswal.github.io/GATE-PAPERS/)**
 Click **"Download APK"** to get the latest signed build directly.
 
 ### Option 2: GitHub Releases

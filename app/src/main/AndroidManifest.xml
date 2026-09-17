@@ -34,6 +34,10 @@
                 <data
                     android:scheme="https"
                     android:host="pushpak-jaiswal.github.io"
+                    android:pathPrefix="/GATE-PAPERS" />
+                <data
+                    android:scheme="https"
+                    android:host="pushpak-jaiswal.github.io"
                     android:pathPrefix="/gate-papers" />
             </intent-filter>
             <intent-filter>

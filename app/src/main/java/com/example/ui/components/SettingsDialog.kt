@@ -378,9 +378,9 @@ fun SettingsDialog(
                         DetailItem(
                             icon = Icons.Default.Language,
                             label = "Showcase & APK Website",
-                            value = "pushpak-jaiswal.github.io/gate-papers",
+                            value = "pushpak-jaiswal.github.io/GATE-PAPERS",
                             isClickable = true,
-                            onClick = { launchExternalUrl(context, "https://pushpak-jaiswal.github.io/gate-papers/") }
+                            onClick = { launchExternalUrl(context, "https://pushpak-jaiswal.github.io/GATE-PAPERS/") }
                         )
 
                         DetailItem(
