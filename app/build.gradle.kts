@@ -11,7 +11,7 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk { version = release(37) }
+  compileSdk = 37
 
   defaultConfig {
     applicationId = "com.aistudio.gatepapers.pushpak"
