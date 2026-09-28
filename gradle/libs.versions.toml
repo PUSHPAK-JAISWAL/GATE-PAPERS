@@ -1,6 +1,6 @@
 #this is a dependency file for gradle for our application
 [versions]
-agp = "9.1.1"
+agp = "9.4.1"
 coreKtx = "1.19.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
