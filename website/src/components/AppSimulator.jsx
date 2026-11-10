@@ -4,7 +4,7 @@ import {
   Printer, ZoomIn, ZoomOut, Share2, Sparkles, Filter, Settings,
   RotateCcw, Bookmark, FileText, Check, X, RefreshCw, ExternalLink,
   Code, Cpu, BarChart2, ShieldCheck, Mail, Trash2,
-  ArrowDown, ArrowUp
+  ArrowDown, ArrowUp, Eye, Download
 } from 'lucide-react';
 import { FaGithub as Github } from 'react-icons/fa';
 import { PAPERS_DATA, APP_CONFIG } from '../data/papersData';
@@ -15,7 +15,7 @@ function extractYear(fileName, fallbackYear) {
   return match ? parseInt(match[1], 10) : (fallbackYear || 0);
 }
 
-export default function AppSimulator() {
+export default function AppSimulator({ onViewPaper }) {
   const { papers: dynamicPapers, stats, config } = useDynamicPapers();
   // Initialize state with dynamic authentic papers
   const [papers, setPapers] = useState(dynamicPapers || PAPERS_DATA);
@@ -549,6 +549,14 @@ export default function AppSimulator() {
                     {/* PDF Actions */}
                     <div className="flex items-center gap-1">
                       <button
+                        onClick={() => onViewPaper && onViewPaper(activeReadingPaper)}
+                        className="px-2 py-1 rounded bg-orange-500/20 text-orange-400 hover:bg-orange-500 hover:text-white border border-orange-500/40 text-[10px] font-bold flex items-center gap-1 transition-all"
+                        title="Read Full Official PDF Online"
+                      >
+                        <Eye className="w-3 h-3" />
+                        <span className="hidden sm:inline">View Online</span>
+                      </button>
+                      <button
                         onClick={() => setZoomLevel(prev => Math.max(70, prev - 15))}
                         className="p-1 rounded bg-slate-800 text-slate-300 hover:text-white"
                         title="Zoom Out"
@@ -569,6 +577,33 @@ export default function AppSimulator() {
                       >
                         <Printer className="w-3.5 h-3.5" />
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Online Paper Viewer Quick Bar */}
+                  <div className="bg-[#182337] px-3 py-1.5 border-b border-slate-800 flex items-center justify-between gap-2 shrink-0">
+                    <span className="text-[10px] text-slate-300 truncate">
+                      Want to read full authentic paper online without downloading?
+                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        onClick={() => onViewPaper && onViewPaper(activeReadingPaper)}
+                        className="text-[9.5px] bg-orange-500 hover:bg-orange-600 text-white font-bold px-2 py-0.5 rounded flex items-center gap-1 transition-colors"
+                      >
+                        <Eye className="w-3 h-3" />
+                        <span>View Online</span>
+                      </button>
+                      <a
+                        href={activeReadingPaper.rawUrl}
+                        download={activeReadingPaper.fileName}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[9.5px] bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-2 py-0.5 rounded flex items-center gap-1 transition-colors"
+                        title="Download PDF"
+                      >
+                        <Download className="w-3 h-3" />
+                        <span>Download</span>
+                      </a>
                     </div>
                   </div>
 

@@ -63,7 +63,7 @@ export default function Navbar({ onDownloadClick }) {
               href="#papers"
               className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-orange-400 hover:bg-slate-800/40 rounded-lg transition-colors"
             >
-              Paper Catalog ({stats.totalPapers})
+              Read Papers ({stats.totalPapers})
             </a>
             <a
               href="#install"
@@ -145,7 +145,7 @@ export default function Navbar({ onDownloadClick }) {
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:bg-slate-800 hover:text-white"
           >
-            Paper Catalog ({stats.totalPapers})
+            Online Papers & Viewer ({stats.totalPapers})
           </a>
           <a
             href="#install"

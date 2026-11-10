@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, QrCode, ShieldCheck, Zap, Sparkles, CheckCircle2, ChevronRight, FileText, Printer, WifiOff } from 'lucide-react';
+import { Download, QrCode, ShieldCheck, Zap, Sparkles, CheckCircle2, ChevronRight, FileText, Printer, WifiOff, Eye } from 'lucide-react';
 import { useDynamicPapers } from '../data/DynamicPapersContext';
 
 export default function Hero({ onDownloadClick, onOpenQrModal }) {
@@ -59,11 +59,11 @@ export default function Hero({ onDownloadClick, onOpenQrModal }) {
             </button>
 
             <a
-              href="#simulator"
+              href="#papers"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-cyan-400 hover:text-cyan-300 font-medium text-sm px-4 py-2 hover:underline"
             >
-              <span>Try Interactive Simulator</span>
-              <ChevronRight className="w-4 h-4" />
+              <Eye className="w-4 h-4" />
+              <span>Read Papers Online</span>
             </a>
           </div>
 

@@ -70,27 +70,22 @@ Grab the latest release APK from our releases page:
 ## 🏗️ Architecture & Tech Stack
 
 ```
-com.example
-├── data
-│   ├── local
-│   │   ├── AppDatabase.kt        // Room Database configuration
-│   │   ├── PaperDao.kt           // Data Access Object with Flow queries
-│   │   └── PaperEntity.kt        // Paper schema with status, cache, & metadata
-│   ├── model
-│   │   └── PaperItem.kt          // Domain model
-│   └── repository
-│       └── PaperRepository.kt    // Single source of truth (Network + Local Cache)
-└── ui
-    ├── components
-    │   ├── PdfViewer.kt          // Native Android PdfRenderer + Touch Canvas
-    │   ├── PaperCard.kt          // Material 3 Paper Item with status toggle
-    │   └── StatsCard.kt          // Preparation progress visualizer
-    ├── screens
-    │   ├── HomeScreen.kt         // Main catalog with filters & search
-    │   └── PdfViewerScreen.kt    // Reader with zoom, pan, and printing
-    └── theme
-        ├── Color.kt              // Deep Dark Canvas & Vibrant Gate Accents
-        └── Theme.kt              // Material 3 Dynamic / Custom Dark Scheme
+GATE-PAPERS/
+├── android/                  # Native Android Application
+│   ├── app/                  # Application module & source code
+│   │   └── src/main/java/com/example/
+│   │       ├── data/         # Room Database, DAOs, & Repositories
+│   │       └── ui/           # Jetpack Compose screens, reader & theme
+│   ├── gradle/               # Gradle wrapper & Version Catalog (libs.versions.toml)
+│   ├── build.gradle.kts      # Android project build configuration
+│   └── settings.gradle.kts   # Module declarations
+├── website/                  # Companion Web Portal & Paper Viewer
+│   ├── src/                  # React UI components, Online Paper Viewer & Catalog
+│   └── public/               # Web assets, sitemap & SEO manifests
+└── .github/                  # Automated CI/CD Workflows & Dependabot
+    └── workflows/
+        ├── package-apk.yml   # Android CI: builds, tests, signs & publishes releases
+        └── deploy.yml        # Web CI: builds and deploys to GitHub Pages
 ```
 
 - **UI Layer**: 100% Declarative Jetpack Compose with Material Design 3.
@@ -113,7 +108,7 @@ com.example
 ```bash
 # 1. Clone repository
 git clone https://github.com/PUSHPAK-JAISWAL/gate-papers.git
-cd gate-papers
+cd gate-papers/android
 
 # 2. Make gradlew executable
 chmod +x gradlew
@@ -124,7 +119,7 @@ chmod +x gradlew
 # 4. Run Unit & JVM tests
 ./gradlew testDebugUnitTest
 ```
-The output APK will be placed at `app/build/outputs/apk/debug/app-debug.apk`.
+The output APK will be placed at `android/app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 

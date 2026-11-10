@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { BookOpen, Search, Download, ExternalLink, FileText, CheckCircle, ArrowDownUp, ArrowDown, ArrowUp } from 'lucide-react';
+import { 
+  BookOpen, Search, Download, ExternalLink, FileText, CheckCircle, 
+  ArrowDownUp, ArrowDown, ArrowUp, Eye, Sparkles
+} from 'lucide-react';
 import { FaGithub as Github } from 'react-icons/fa';
 import { useDynamicPapers } from '../data/DynamicPapersContext';
 
@@ -8,7 +11,7 @@ function extractYear(fileName, fallbackYear) {
   return match ? parseInt(match[1], 10) : (fallbackYear || 0);
 }
 
-export default function PapersCatalog({ onDownloadClick }) {
+export default function PapersCatalog({ onDownloadClick, onViewPaper }) {
   const { papers, stats, config } = useDynamicPapers();
   const [selectedDiscipline, setSelectedDiscipline] = useState('ALL');
   const [search, setSearch] = useState('');
@@ -44,6 +47,18 @@ export default function PapersCatalog({ onDownloadClick }) {
     return 0;
   });
 
+  const handleDownloadPaper = (paper, e) => {
+    e.stopPropagation();
+    const link = document.createElement('a');
+    link.href = paper.rawUrl;
+    link.download = paper.fileName || 'GATE-Paper.pdf';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <section id="papers" className="py-24 bg-[#0B101D] relative border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +74,7 @@ export default function PapersCatalog({ onDownloadClick }) {
             </h2>
             <p className="text-slate-400 text-sm sm:text-base mt-2 max-w-2xl">
               All question papers ({stats.yearRange}) are directly synchronized from verified repositories (<a href={config.gateCsRepo} target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:underline">gatecs</a> & <a href={config.gateDaRepo} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">gateda</a>).
-              Zero altered scans, zero watermarks, and 100% verified question papers.
+              Read every question directly in the online viewer without downloading, or download offline copies anytime.
             </p>
           </div>
 
@@ -138,7 +153,8 @@ export default function PapersCatalog({ onDownloadClick }) {
           {sorted.map(paper => (
             <div
               key={paper.id}
-              className="p-6 rounded-2xl bg-[#111726] border border-slate-800 hover:border-slate-700 transition-all duration-200 flex flex-col justify-between group shadow-sm hover:shadow-md"
+              className="p-6 rounded-2xl bg-[#111726] border border-slate-800 hover:border-slate-700 transition-all duration-200 flex flex-col justify-between group shadow-sm hover:shadow-md cursor-pointer"
+              onClick={() => onViewPaper && onViewPaper(paper)}
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
@@ -161,8 +177,9 @@ export default function PapersCatalog({ onDownloadClick }) {
                   </span>
                 </div>
 
-                <h4 className="text-base font-bold text-white font-mono mb-1 group-hover:text-orange-400 transition-colors">
-                  {paper.fileName}
+                <h4 className="text-base font-bold text-white font-mono mb-1 group-hover:text-orange-400 transition-colors flex items-center justify-between">
+                  <span>{paper.fileName}</span>
+                  <Eye className="w-4 h-4 text-slate-500 group-hover:text-orange-400 transition-colors shrink-0" />
                 </h4>
 
                 <p className="text-xs text-slate-400 mb-3 font-mono">
@@ -182,26 +199,42 @@ export default function PapersCatalog({ onDownloadClick }) {
                 </div>
               </div>
 
-              {/* Card Footer Actions */}
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                <a
-                  href={paper.rawUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-orange-400 font-semibold hover:text-orange-300 flex items-center gap-1.5"
+              {/* Card Footer Actions: View Online & Download */}
+              <div 
+                className="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* 1. View Online Button (No download required) */}
+                <button
+                  type="button"
+                  onClick={() => onViewPaper && onViewPaper(paper)}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 bg-orange-500/10 hover:bg-orange-500 text-orange-400 hover:text-white border border-orange-500/30 hover:border-orange-500 font-semibold text-xs py-2 px-3 rounded-xl transition-all shadow-sm"
+                  title={`View ${paper.fileName} online without downloading`}
                 >
-                  <FileText className="w-3.5 h-3.5" />
-                  <span>Raw PDF</span>
-                </a>
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>View Online</span>
+                </button>
+
+                {/* 2. Direct Download Button (For those who want to download) */}
+                <button
+                  type="button"
+                  onClick={(e) => handleDownloadPaper(paper, e)}
+                  className="inline-flex items-center justify-center gap-1.5 bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold py-2 px-3 rounded-xl transition-all"
+                  title={`Download ${paper.fileName} for offline study`}
+                >
+                  <Download className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Download</span>
+                </button>
+
+                {/* 3. GitHub Source Link */}
                 <a
                   href={paper.repoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1 font-mono"
+                  className="p-2 rounded-xl bg-slate-800/40 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+                  title="View on GitHub"
                 >
-                  <Github className="w-3 h-3" />
-                  <span>GitHub File</span>
-                  <ExternalLink className="w-2.5 h-2.5 ml-0.5 text-slate-500" />
+                  <Github className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
@@ -210,7 +243,7 @@ export default function PapersCatalog({ onDownloadClick }) {
 
         {/* CTA Bottom Banner */}
         <div className="text-center p-8 rounded-2xl bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-cyan-500/10 border border-orange-500/20 max-w-4xl mx-auto">
-          <h3 className="text-xl font-bold text-white mb-2">Want to practice and solve all {stats.totalPapers} papers offline?</h3>
+          <h3 className="text-xl font-bold text-white mb-2">Want to practice and solve all {stats.totalPapers} papers offline on your phone?</h3>
           <p className="text-sm text-slate-300 mb-6 max-w-xl mx-auto">
             Get the full GATE Papers APK directly on your Android phone. Built-in PDF reader, offline SQLite caching, preparation tracker, and print spooling.
           </p>

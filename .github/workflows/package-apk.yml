@@ -3,9 +3,15 @@ name: Package Android APK
 on:
   push:
     branches: [ "main", "master" ]
+    paths:
+      - 'android/**'
+      - '.github/workflows/package-apk.yml'
     tags: [ "v*" ]
   pull_request:
     branches: [ "main", "master" ]
+    paths:
+      - 'android/**'
+      - '.github/workflows/package-apk.yml'
   workflow_dispatch:
     inputs:
       create_release:
@@ -47,8 +53,10 @@ jobs:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
+          build-root-directory: android
 
       - name: Prepare Debug Keystore
+        working-directory: android
         run: |
           if [ -f "debug.keystore.base64" ] && [ ! -f "debug.keystore" ]; then
             echo "Decoding debug keystore from debug.keystore.base64..."
@@ -60,9 +68,11 @@ jobs:
           fi
 
       - name: Make gradlew executable
+        working-directory: android
         run: chmod +x gradlew
 
       - name: Build Android APK
+        working-directory: android
         run: ./gradlew assembleDebug --no-daemon --no-configuration-cache --stacktrace
 
       - name: Determine Release Tag
@@ -86,14 +96,14 @@ jobs:
         run: |
           mkdir -p release-artifacts
           TAG="${{ steps.release_info.outputs.tag }}"
-          APK_PATH=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          APK_PATH=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
           if [ -n "$APK_PATH" ] && [ -f "$APK_PATH" ]; then
             echo "Found APK at: $APK_PATH"
             cp "$APK_PATH" release-artifacts/GATE-Papers.apk
             cp "$APK_PATH" "release-artifacts/GATE-Papers-${TAG}.apk"
             ls -lh release-artifacts/
           else
-            echo "Error: APK not found in app/build/outputs/apk/debug"
+            echo "Error: APK not found in android/app/build/outputs/apk/debug"
             exit 1
           fi
 

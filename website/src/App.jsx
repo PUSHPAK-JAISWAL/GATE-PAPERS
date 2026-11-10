@@ -9,12 +9,14 @@ import FaqSection from './components/FaqSection';
 import AuthorSection from './components/AuthorSection';
 import Footer from './components/Footer';
 import QrCodeModal from './components/QrCodeModal';
+import PaperViewerModal from './components/PaperViewerModal';
 import { DynamicPapersProvider, useDynamicPapers } from './data/DynamicPapersContext';
 import { CheckCircle2, Download, AlertCircle, X } from 'lucide-react';
 
 function AppContent() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [downloadNotification, setDownloadNotification] = useState(false);
+  const [viewingPaper, setViewingPaper] = useState(null);
   const { config, stats } = useDynamicPapers();
 
   const handleDownload = () => {
@@ -78,13 +80,16 @@ function AppContent() {
       />
 
       {/* Interactive App Simulator */}
-      <AppSimulator />
+      <AppSimulator onViewPaper={(paper) => setViewingPaper(paper)} />
 
       {/* Key Features Breakdown */}
       <Features />
 
       {/* Verified Papers Catalog Directory */}
-      <PapersCatalog onDownloadClick={handleDownload} />
+      <PapersCatalog 
+        onDownloadClick={handleDownload} 
+        onViewPaper={(paper) => setViewingPaper(paper)} 
+      />
 
       {/* Step-by-Step Android Installation Guide */}
       <InstallGuide onDownloadClick={handleDownload} />
@@ -97,6 +102,13 @@ function AppContent() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Online Paper Viewer Modal (Zero-download PDF reading) */}
+      <PaperViewerModal
+        isOpen={!!viewingPaper}
+        paper={viewingPaper}
+        onClose={() => setViewingPaper(null)}
+      />
 
       {/* QR Code Modal for Phone Scanning */}
       <QrCodeModal

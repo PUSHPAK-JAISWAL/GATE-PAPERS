@@ -4,7 +4,7 @@ version: 2
 updates:
   # Android Gradle dependencies & version catalog
   - package-ecosystem: "gradle"
-    directory: "/"
+    directory: "/android"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -63,4 +63,4 @@ updates:
     labels:
       - "dependencies"
       - "website"
-      - "javascript"
+      - "npm"

@@ -49,8 +49,15 @@ Have an idea to improve the app, or want to suggest verified official question p
 2. Keep your changes focused and minimal.
 3. Test thoroughly on local JVM tests and verify build compilation:
    ```bash
+   # Android App:
+   cd android
    ./gradlew assembleDebug
    ./gradlew testDebugUnitTest
+
+   # Website:
+   cd ../website
+   npm install
+   npm run build
    ```
 4. Submit a Pull Request targeting the `main` branch with a clear description using our [Pull Request Template](.github/pull_request_template.md).
 
@@ -68,9 +75,9 @@ Have an idea to improve the app, or want to suggest verified official question p
 1. Clone your fork:
    ```bash
    git clone https://github.com/PUSHPAK-JAISWAL/gate-papers.git
-   cd gate-papers
+   cd gate-papers/android
    ```
-2. Open the project in Android Studio.
+2. Open the `android/` directory in Android Studio.
 3. Let Gradle sync and resolve all dependencies.
 4. Run the app on your device or emulator:
    ```bash

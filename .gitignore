@@ -1,18 +1,31 @@
-*.iml
-.gradle
-.kotlin
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+# Root Git Ignore for GATE Papers (Android App & Website Monorepo)
+
+# OS & Editor files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
-.env
-debug.keystore
+Thumbs.db
+*.iml
+.idea/
+.vscode/
+
+# Android module ignores
+android/.gradle/
+android/.kotlin/
+android/local.properties
+android/**/build/
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+android/.env
+android/debug.keystore
+android/debug.keystore.base64
+
+# Website ignores
+website/node_modules/
+website/dist/
+website/.env
+website/.env.local
+
+# General build & temporary
+build/
+.gradle/
+*.log

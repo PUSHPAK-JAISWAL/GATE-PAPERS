@@ -35,10 +35,12 @@ jobs:
           cache-dependency-path: 'website/package-lock.json'
 
       - name: Install dependencies
-        run: npm --prefix website ci || npm --prefix website install
+        working-directory: website
+        run: npm ci || npm install
 
       - name: Build with Vite
-        run: npm --prefix website run build
+        working-directory: website
+        run: npm run build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

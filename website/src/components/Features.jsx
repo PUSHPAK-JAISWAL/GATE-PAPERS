@@ -9,8 +9,8 @@ const FEATURE_LIST = [
     icon: FileText,
     iconColor: 'text-orange-400',
     iconBg: 'bg-orange-500/10 border-orange-500/20',
-    title: 'Native In-App PDF Reader',
-    description: 'No bloated 3rd-party PDF viewers with full-screen ads. Read GATE question papers directly inside the app with fluid pan, pinch-to-zoom, and page jumping.'
+    title: 'In-App & Online Web PDF Reader',
+    description: 'No bloated 3rd-party PDF viewers with full-screen ads. Read GATE question papers directly inside the app or online on this website with fluid pan, pinch-to-zoom, and zero forced downloads.'
   },
   {
     icon: WifiOff,
