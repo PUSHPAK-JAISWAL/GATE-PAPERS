@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.5",
     "lucide-react": "^1.70.0",
     "pdfjs-dist": "^6.5.438",
     "react": "^19.3.1",
